@@ -1,49 +1,74 @@
-import { useState } from "react";
-import OpenAI from "openai/index.js";
-function App() {
+import React, { useState } from "react";
+
+const Tts = () => {
+  const [input, setInput] = useState("");
+  const [voice, setVoice] = useState("alloy");
   const [loading, setLoading] = useState(false);
+
   const generateSpeech = async () => {
     setLoading(true);
     try {
-      const openai = new OpenAI({
-        apiKey: process.env.REACT_APP_OPENAI_API_KEY, // Ensure this is set in your .env file
-        dangerouslyAllowBrowser: true
+      const response = await fetch("http://localhost:5000/api/generate-speech", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ input, voice }),
       });
-
-      const mp3 = await openai.audio.speech.create({
-        model: "tts-1",
-        voice: "alloy",
-        input: "Today is a wonderful day to build something people love!",
-      });
-
-      // Create a blob from the audio buffer
-      const audioBlob = new Blob([await mp3.arrayBuffer()], { type: "audio/mp3" });
-
-      // Create a URL for the blob
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      // Trigger download
+  
+      if (!response.ok) {
+        throw new Error("Failed to generate speech");
+      }
+  
+      // Handle response as a Blob (binary data)
+      const blob = await response.blob();
+  
+      // Create a URL for the Blob and trigger a download
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = audioUrl;
-      a.download = "speech.mp3";
+      a.href = url;
+      a.download = "speech.mp3"; // Set the desired filename
+      document.body.appendChild(a);
       a.click();
-
-      // Revoke the URL to free up memory
-      URL.revokeObjectURL(audioUrl);
+      document.body.removeChild(a);
+  
+      // Clean up the Blob URL
+      window.URL.revokeObjectURL(url);
+  
+      console.log("Speech file downloaded successfully!");
     } catch (error) {
       console.error("Error generating speech:", error);
+      alert("An error occurred while generating the speech.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div>
+      <h1>Text-to-Speech Generator</h1>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter text to generate speech"
+        rows="4"
+        cols="50"
+      />
+      <br />
+      <label>
+        Voice:
+        <select value={voice} onChange={(e) => setVoice(e.target.value)}>
+          <option value="alloy">Alloy</option>
+          <option value="other-voice">Other Voice</option>
+        </select>
+      </label>
+      <br />
       <button onClick={generateSpeech} disabled={loading}>
         {loading ? "Generating..." : "Generate Speech"}
       </button>
     </div>
   );
-}
+};
 
-export default App;
+export default Tts;
