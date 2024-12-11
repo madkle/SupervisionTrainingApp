@@ -3,7 +3,7 @@ const OpenAI = require("openai");
 const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
-
+const fs = require("fs");
 // Load .env file
 dotenv.config();
 
@@ -13,11 +13,39 @@ const port = 5000;
 app.use(cors());
 
 const openai = new OpenAI({
-  apiKey:process.env.OPENAI_API_KEY
-
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.use(express.json());
+
+
+// Route for transcription
+app.post("/api/transcribe", async (req, res) => {
+  try {
+    // Specify the path to the audio file
+    const audioFilePath = path.join(__dirname, "./uploads/audio.mp3");
+
+    // Check if the file exists
+    if (!fs.existsSync(audioFilePath)) {
+      return res.status(404).send("Audio file not found");
+    }
+
+    // Read the audio file
+    const audioFile = fs.createReadStream(audioFilePath);
+
+    // Send the audio file to OpenAI for transcription
+    const transcription = await openai.audio.transcriptions.create({
+      file: audioFile,
+      model: "whisper-1", // Specify the transcription model
+    });
+
+    // Respond with the transcription text
+    res.json({ transcription: transcription.text });
+  } catch (error) {
+    console.error("Error transcribing audio:", error);
+    res.status(500).send("Error transcribing audio");
+  }
+});
 
 app.post("/api/generate-speech", async (req, res) => {
   const { input, voice } = req.body;
@@ -50,7 +78,6 @@ app.post("/api/generate-speech", async (req, res) => {
     res.status(500).send("Error generating speech");
   }
 });
-
 
 app.use(express.static(path.join(__dirname, "../../client/build")));
 
