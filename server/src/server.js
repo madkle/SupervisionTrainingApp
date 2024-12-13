@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const fs = require("fs");
+const multer = require("multer");
 // Load .env file
 dotenv.config();
 
@@ -18,12 +19,44 @@ const openai = new OpenAI({
 
 app.use(express.json());
 
+// Ensure the downloads directory exists
+const DOWNLOADS_DIR = path.join(__dirname, "downloads");
+
+
+if (!fs.existsSync(DOWNLOADS_DIR)) {
+  fs.mkdirSync(DOWNLOADS_DIR);
+}
+
+
+// Multer configuration for saving uploaded files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DOWNLOADS_DIR); // Save files to the downloads directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Use the original file name
+  },
+});
+const upload = multer({ storage });
+
+
+// Endpoint to handle audio uploads
+app.post("/api/save-audio", upload.single("file"), (req, res) => {
+  try {
+    console.log(`File received: ${req.file.filename}`);
+    res.status(200).send("Audio file saved successfully.");
+  } catch (error) {
+    console.error("Error saving file:", error);
+    res.status(500).send("Error saving file.");
+  }
+});
+
 
 // Route for transcription
 app.post("/api/transcribe", async (req, res) => {
   try {
     // Specify the path to the audio file
-    const audioFilePath = path.join(__dirname, "./uploads/audio.mp3");
+    const audioFilePath = path.join(__dirname, "./downloads/recorded-audio.webm");
 
     // Check if the file exists
     if (!fs.existsSync(audioFilePath)) {
