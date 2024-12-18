@@ -23,7 +23,7 @@ const Llm = () => {
 
       const data = await response.json();
       console.log(data);
-      setOllamaResponse(`Ollama: ${data.response}` )
+      setOllamaResponse(`Ollama: ${data.content.response}` )
 
     } catch (error) {
       console.error("Error during ollama:", error);
@@ -70,7 +70,7 @@ const Llm = () => {
     <div>
       <h1>Test the Ollama API</h1>
       <button onClick={callOllama} disabled={loading}>
-        {loading ? "Generating..." : "Generate Speech"}
+        {loading ? "Generating..." : "Generate response"}
       </button>
       <p>{ollamaResponse}</p>
     </div>
