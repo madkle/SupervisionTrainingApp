@@ -5,7 +5,7 @@ import React, { useState } from "react";
 const Llm = () => {
   const [voice, setVoice] = useState("alloy");
   const [loading, setLoading] = useState(false);
-
+    const [ollamaResponse, setOllamaResponse] = useState("");
 
   const callOllama = async () => {
     setLoading(true);
@@ -18,15 +18,15 @@ const Llm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to transcribe audio");
+        throw new Error("Failed to generate text with ollama");
       }
 
       const data = await response.json();
       console.log(data);
-
+      setOllamaResponse(`Ollama: ${data.response}` )
 
     } catch (error) {
-      console.error("Error during transcription:", error);
+      console.error("Error during ollama:", error);
     } finally {
       setLoading(false);
     }
@@ -72,6 +72,7 @@ const Llm = () => {
       <button onClick={callOllama} disabled={loading}>
         {loading ? "Generating..." : "Generate Speech"}
       </button>
+      <p>{ollamaResponse}</p>
     </div>
   );
 };

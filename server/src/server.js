@@ -1,16 +1,23 @@
-const express = require("express");
-const OpenAI = require("openai");
-const dotenv = require("dotenv");
-const path = require("path");
-const cors = require("cors");
-const fs = require("fs");
-const multer = require("multer");
-const ollama = require("ollama");
-// Load .env file
+import express from "express";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+import path from "path";
+import cors from "cors";
+import fs from "fs";
+import multer from "multer";
+import ollama from "ollama";
+import { fileURLToPath } from "url";
+
+// Load environment variables
 dotenv.config();
+
+// Determine __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 5000;
+
 // Enable CORS for all routes
 app.use(cors());
 
@@ -20,38 +27,35 @@ const openai = new OpenAI({
 
 app.use(express.json());
 
-
-// Endpoint to handle audio uploads
+// Endpoint to handle Ollama API
 app.post("/api/ollama", async (req, res) => {
   try {
-    console.log(`starting ollama`);
-    const prompt = "why is the sky blue. Keep the answer short. max 30 words";
+    console.log("Starting Ollama...");
+    const prompt = "Why is the sky blue? Keep the answer short. Max 15 words.";
 
-    const output = await ollama.generate({ model: "llama3.1", prompt: prompt, stream: true })
-    console.log(output);
-    
+    const output = await ollama.generate({
+      model: "llama3.1",
+      prompt,
+      stream: false,
+    });
+    /*
+    code to get it to stream in server
     for await (const part of output) {
-      process.stdout.write(part.response)
+      process.stdout.write(part.response);
     }
-
-
-    res.status(200).send("Audio file saved successfully.");
+      */
+    res.status(200).send({ content: output });
   } catch (error) {
-    console.error("Error saving file:", error);
-    res.status(500).send("Error saving file.");
+    console.error("Error with Ollama:", error);
+    res.status(500).send("Error generating response.");
   }
 });
 
-
-
 // Ensure the downloads directory exists
 const DOWNLOADS_DIR = path.join(__dirname, "downloads");
-
-
 if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR);
 }
-
 
 // Multer configuration for saving uploaded files
 const storage = multer.diskStorage({
@@ -64,7 +68,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
 // Endpoint to handle audio uploads
 app.post("/api/save-audio", upload.single("file"), (req, res) => {
   try {
@@ -76,28 +79,22 @@ app.post("/api/save-audio", upload.single("file"), (req, res) => {
   }
 });
 
-
 // Route for transcription
 app.post("/api/transcribe", async (req, res) => {
   try {
-    // Specify the path to the audio file
-    const audioFilePath = path.join(__dirname, "./downloads/recorded-audio.webm");
+    const audioFilePath = path.join(DOWNLOADS_DIR, "recorded-audio.webm");
 
-    // Check if the file exists
     if (!fs.existsSync(audioFilePath)) {
       return res.status(404).send("Audio file not found");
     }
 
-    // Read the audio file
     const audioFile = fs.createReadStream(audioFilePath);
 
-    // Send the audio file to OpenAI for transcription
     const transcription = await openai.audio.transcriptions.create({
       file: audioFile,
-      model: "whisper-1", // Specify the transcription model
+      model: "whisper-1",
     });
 
-    // Respond with the transcription text
     res.json({ transcription: transcription.text });
   } catch (error) {
     console.error("Error transcribing audio:", error);
@@ -105,29 +102,26 @@ app.post("/api/transcribe", async (req, res) => {
   }
 });
 
+// Endpoint to generate speech
 app.post("/api/generate-speech", async (req, res) => {
   const { input, voice } = req.body;
 
   try {
     console.log("Generating speech with input:", input, "and voice:", voice);
 
-    // Generate speech using OpenAI API
     const mp3 = await openai.audio.speech.create({
       model: "tts-1",
       voice: voice || "alloy",
       input,
     });
 
-    // Convert the response to a binary buffer
     const audioBuffer = Buffer.from(await mp3.arrayBuffer());
 
-    // Set headers to indicate the response is a downloadable audio file
     res.set({
-      "Content-Type": "audio/mpeg", // Set the correct MIME type for an MP3 file
-      "Content-Disposition": 'attachment; filename="speech.mp3"', // Set the filename for the download
+      "Content-Type": "audio/mpeg",
+      "Content-Disposition": 'attachment; filename="speech.mp3"',
     });
 
-    // Send the audio file to the client
     res.send(audioBuffer);
 
     console.log("Speech generation successful, file sent!");
@@ -137,12 +131,14 @@ app.post("/api/generate-speech", async (req, res) => {
   }
 });
 
+// Serve React build files
 app.use(express.static(path.join(__dirname, "../../client/build")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../../client/build/index.html"));
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
