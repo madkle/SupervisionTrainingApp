@@ -5,6 +5,7 @@ const path = require("path");
 const cors = require("cors");
 const fs = require("fs");
 const multer = require("multer");
+const ollama = require("ollama");
 // Load .env file
 dotenv.config();
 
@@ -18,6 +19,30 @@ const openai = new OpenAI({
 });
 
 app.use(express.json());
+
+
+// Endpoint to handle audio uploads
+app.post("/api/ollama", async (req, res) => {
+  try {
+    console.log(`starting ollama`);
+    const prompt = "why is the sky blue. Keep the answer short. max 30 words";
+
+    const output = await ollama.generate({ model: "llama3.1", prompt: prompt, stream: true })
+    console.log(output);
+    
+    for await (const part of output) {
+      process.stdout.write(part.response)
+    }
+
+
+    res.status(200).send("Audio file saved successfully.");
+  } catch (error) {
+    console.error("Error saving file:", error);
+    res.status(500).send("Error saving file.");
+  }
+});
+
+
 
 // Ensure the downloads directory exists
 const DOWNLOADS_DIR = path.join(__dirname, "downloads");
