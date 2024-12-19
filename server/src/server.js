@@ -26,7 +26,53 @@ const openai = new OpenAI({
 });
 
 app.use(express.json());
+app.post("/api/streamTest", async (req, res) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Transfer-Encoding", "chunked");
+  res.flushHeaders();
 
+  const text = "This is a test of true streaming. Each word streams incrementally to the client.";
+  const words = text.split(" "); // Split text into words
+  const delay = 500; // Delay in ms between sending each word
+
+  for (const word of words) {
+    res.write(word + " "); // Send one word at a time
+    console.log(`Sent: ${word}`);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  res.end(); // End the response stream
+});
+
+
+
+
+
+app.post("/api/ollama", async (req, res) => {
+  try {
+    console.log("Starting Ollama with streaming...");
+    const prompt = "Why is the sky blue? Keep the answer short. Max 150 words.";
+
+    const output = await ollama.generate({
+      model: "llama3.1",
+      prompt,
+      stream: true,
+    });
+
+    res.setHeader("Content-Type", "text/plain");
+
+    for await (const part of output) {
+      res.write(part.response); // Stream each chunk to the client
+    }
+
+    res.end(); // Close the response
+  } catch (error) {
+    console.error("Error with Ollama:", error);
+    res.status(500).send("Error generating response.");
+  }
+});
+
+/*
 // Endpoint to handle Ollama API
 app.post("/api/ollama", async (req, res) => {
   try {
@@ -38,19 +84,18 @@ app.post("/api/ollama", async (req, res) => {
       prompt,
       stream: false,
     });
-    /*
-    code to get it to stream in server
-    for await (const part of output) {
-      process.stdout.write(part.response);
-    }
-      */
+    
+    //code to get it to stream in server
+    //for await (const part of output) {
+      //process.stdout.write(part.response);
+    //}
     res.status(200).send({ content: output });
   } catch (error) {
     console.error("Error with Ollama:", error);
     res.status(500).send("Error generating response.");
   }
 });
-
+*/
 // Ensure the downloads directory exists
 const DOWNLOADS_DIR = path.join(__dirname, "downloads");
 if (!fs.existsSync(DOWNLOADS_DIR)) {

@@ -66,7 +66,7 @@ const AudioRecorder = () => {
 
   return (
     <div>
-      <audio controls src={recordedUrl} />
+      {/*<audio controls src={recordedUrl} />*/}
       <button onClick={startRecording}>Start Recording</button>
       <button onClick={stopRecording}>Stop Recording</button>
     </div>

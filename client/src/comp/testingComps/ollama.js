@@ -1,12 +1,49 @@
 import React, { useState } from "react";
 
-
-
 const Llm = () => {
-  const [voice, setVoice] = useState("alloy");
   const [loading, setLoading] = useState(false);
-    const [ollamaResponse, setOllamaResponse] = useState("");
+  const [ollamaResponse, setOllamaResponse] = useState("");
 
+
+    
+  const callOllama = async () => {
+    setLoading(true);
+    setOllamaResponse(""); // Clear previous response
+  
+    try {
+      const response = await fetch("/api/ollama", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to generate response from Ollama");
+      }
+  
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+  
+      let done = false;
+  
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        done = streamDone;
+  
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          setOllamaResponse((prev) => prev + chunk); // Append chunk to the response
+        }
+      }
+    } catch (error) {
+      console.error("Error during Ollama:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  /*
   const callOllama = async () => {
     setLoading(true);
     try {
@@ -31,6 +68,8 @@ const Llm = () => {
       setLoading(false);
     }
   };
+  */
+
   /*
   const callOllama = async () => {
     setLoading(true);
@@ -72,9 +111,13 @@ const Llm = () => {
       <button onClick={callOllama} disabled={loading}>
         {loading ? "Generating..." : "Generate response"}
       </button>
-      <p>{ollamaResponse}</p>
+      <div>
+        <h2>Response:</h2>
+        <p>{ollamaResponse}</p>
+      </div>
     </div>
   );
+  
 };
 
 export default Llm;

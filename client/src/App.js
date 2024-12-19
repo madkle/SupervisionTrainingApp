@@ -1,16 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
-import Tts from "./comp/tts.js";
-import Transcription from "./comp/Transcription.js";
-import AudioRecorder from "./comp/recording.js";
-import Llm from "./comp/ollama.js";
+import "./App.css";
+import React, { useState } from "react";
+import TestingSuite from "./comp/testingSuite.js";
+import HomePage from "./comp/homePage.js";
+import ToggleButton from "./comp/button.js";
 function App() {
+  const [showTestingSuite, setShowTestingSuite] = useState(false);
+  const toggleTesting = () => {
+    setShowTestingSuite(!showTestingSuite);
+  };
   return (
     <div className="App">
-      <Llm/>
-      <Tts/>
-      <Transcription/>
-      <AudioRecorder/>
+      <ToggleButton
+        trueState={{
+          text: "Toggle off Testing Suite",
+          component: <TestingSuite />,
+        }}
+        falseState={{
+          text: "Toggle on Testing Suite",
+          component: <HomePage />,
+        }}
+      />
     </div>
   );
 }
