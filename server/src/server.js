@@ -10,7 +10,11 @@ import { fileURLToPath } from "url";
 
 // Load environment variables
 dotenv.config();
+/*
 
+import ollama from 'ollama';
+
+*/
 // Determine __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,12 +30,14 @@ const openai = new OpenAI({
 });
 
 app.use(express.json());
+
 app.post("/api/streamTest", async (req, res) => {
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Transfer-Encoding", "chunked");
   res.flushHeaders();
 
-  const text = "This is a test of true streaming. Each word streams incrementally to the client.";
+  const text =
+    "This is a test of true streaming. Each word streams incrementally to the client.";
   const words = text.split(" "); // Split text into words
   const delay = 500; // Delay in ms between sending each word
 
@@ -44,9 +50,34 @@ app.post("/api/streamTest", async (req, res) => {
   res.end(); // End the response stream
 });
 
-
-
-
+app.post("/api/ollamaChat", async (req, res) => {
+  try {
+    console.log("Starting Ollama chat");
+    const message = [
+      { role: "system", content: "You are going to asnwer simply with max 50 words" },
+      { role: "user", content: "Why is the sky blue?" },
+    ];
+    const response = await ollama.chat({
+      model: "llama3.1",
+      messages: message,
+      stream: true,
+    });
+    console.log("\n Response \n");
+    console.log();
+    
+    console.log("\n Stream \n");
+    for await (const part of response) {
+      process.stdout.write(part.message.content);
+    }
+    console.log("\n done");
+    console.log(response);
+    
+    res.status(200).send(response);
+  } catch (error) {
+    console.error("Error with Ollama chat:", error);
+    res.status(500).send("Error generating chat response.");
+  }
+});
 
 app.post("/api/ollama", async (req, res) => {
   try {
