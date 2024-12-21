@@ -10,11 +10,7 @@ import { fileURLToPath } from "url";
 
 // Load environment variables
 dotenv.config();
-/*
 
-import ollama from 'ollama';
-
-*/
 // Determine __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,7 +25,41 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+
 app.use(express.json());
+
+
+
+app.post("/api/testOllamaChat", async (req, res) => {
+  const body = req.body;
+  console.log(body.messageLog);
+  
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Transfer-Encoding", "chunked");
+  console.log("Starting Ollama chat");
+  
+  const response = await ollama.chat({
+    model: "llama3.1",
+    messages: body.messageLog,
+    stream: true,
+  });
+
+  for await (const part of response) {
+    res.write(part.message.content);
+  }
+  console.log("done");
+  
+  
+  res.end();
+});
+
+
+
+
+
+
+
+
 
 app.post("/api/streamTest", async (req, res) => {
   res.setHeader("Content-Type", "text/plain; charset=utf-8");

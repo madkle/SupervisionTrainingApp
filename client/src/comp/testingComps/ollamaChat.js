@@ -1,64 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from "react";
+
 const OllamaChat = () => {
-    const [message, setMessage] = useState('');
-    const [conversation, setConversation] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+  const character = { name: "Claude", age: 25, occupation: "student", workplace: "Nursing home", personality: "shy and introverted" };
+  const exampleData = [
+    {
+      role: "system",
+      content: `Lets roleplay. Your character is ${character.name}, who is ${character.age} years old. You are a ${character.personality} ${character.occupation} who has been coming late to work at the ${character.workplace} the past month. You are called into a supervision meeting with you supervisor to answer some questions about your absense. You are nervous and anxious about the meeting. answer accordingly. if you dont know the answer, just say you dont know.`,
+    },
+    {
+      role: "assistant",
+      content: "Hello... What did you want to talk about today?",
+    },
+    /*
+    {
+      role: "user",
+      content: "Hey, I need help with something. Why is the sky blue?",
+    },
+    {
+      role: "assistant",
+      content:
+        "The sky is blue because of the way the Earth's atmosphere scatters sunlight. The short-wavelength blue and violet scatter more than other colors, making the sky appear blue.",
+    },
+    */
+  ];
+  const [messageLog, setMessageLog] = useState(exampleData);
+  const [inputMessage, setInputMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef(null);
+  const handleSendMessage = async () => {
+    setIsLoading(true);
 
-    const handleInputChange = (e) => {
-        setMessage(e.target.value);
-    };
+    setInputMessage(""); // Clear the input field
 
-    const handleSendMessage = async () => {
-        try {
-          const response = await fetch("/api/ollamaChat", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json", // Optional for POST with no body
-            },
-          });
-    
-          if (!response.ok) {
-            throw new Error("Failed to transcribe audio");
+    // Update the message log with the new user message
+    //console.log(messageLog);
+
+    const updatedMessageLog = [
+      ...messageLog,
+      {
+        role: "user",
+        content: inputMessage,
+      },
+    ];
+
+    setMessageLog(updatedMessageLog);
+
+    // Send the updated message log to the server
+    /*
+    console.log("Sending message to server...");
+    console.log(updatedMessageLog);
+*/
+    const response = await fetch(`/api/testOllamaChat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/plain, ",
+      },
+      body: JSON.stringify({ messageLog: updatedMessageLog }),
+    });
+
+    if (!response.ok || !response.body) {
+      throw response.statusText;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        setIsLoading(false);
+        break;
+      }
+      const chunk = decoder.decode(value, { stream: true });
+      streamMessage(chunk);
+    }
+
+    setInputMessage(""); // Clear the input field
+  };
+
+  const streamMessage = (chunk) => {
+    console.log("Message returned from server: ", chunk);
+
+    setMessageLog((prevMessageLog) => {
+      const updatedMessageLog = [
+        ...prevMessageLog,
+        {
+          role: "assistant",
+          content: chunk,
+        },
+      ];
+
+      console.log("Message log updated: ", updatedMessageLog);
+      return updatedMessageLog;
+    });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setInputMessage(e.target.value);
+  };
+  return (
+    <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
+      <h1>Ollama Chat</h1>
+
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "10px",
+          height: "300px",
+          overflowY: "scroll",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        {messageLog
+          .filter((msg) => msg.role !== "system") // Exclude messages with role === "system"
+          .map((msg, index) => (
+            <div
+              key={index}
+              style={{
+                textAlign: msg.role === "user" ? "right" : "left",
+                borderBottom: "1px solid #ccc",
+              }}
+            >
+              <strong>{msg.role === "assistant" ? character.name : msg.role}:</strong> {msg.content}
+            </div>
+          ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          padding: "10px 0",
+          marginTop: "10px",
+          minHeight: "50px",
+        }}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputMessage}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          style={{ width: "100%", fontSize: "24px" }}
+          placeholder={
+            isLoading ? "awaiting response..." : "Type your message here..."
           }
-    
-          const data = await response.json();
-          console.log(data);
-        } catch (error) {
-          console.error("Error during transcription:", error);
-        } 
-      };
-
-    return (
-        <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-            <h1>Ollama Chat</h1>
-
-            <div style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'scroll', marginBottom: '10px' }}>
-                {conversation.map((msg, index) => (
-                    <div key={index} style={{ margin: '5px 0', textAlign: msg.sender === 'User' ? 'right' : 'left' }}>
-                        <strong>{msg.sender}: </strong>
-                        <span>{msg.text}</span>
-                    </div>
-                ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: '10px' }}>
-                <input
-                    type="text"
-                    value={message}
-                    onChange={handleInputChange}
-                    style={{ flexGrow: 1, padding: '10px', fontSize: '16px' }}
-                    placeholder="Type your message here..."
-                />
-                <button
-                    onClick={handleSendMessage}
-                    disabled={isLoading}
-                    style={{ padding: '10px', fontSize: '16px' }}
-                >
-                    {isLoading ? 'Sending...' : 'Send'}
-                </button>
-            </div>
-        </div>
-    );
+          disabled={isLoading}
+        />
+        <button onClick={handleSendMessage} disabled={isLoading}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default OllamaChat;
