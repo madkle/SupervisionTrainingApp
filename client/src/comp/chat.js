@@ -1,21 +1,30 @@
 import React, { useState, useRef } from "react";
-
+import { generateSpeech } from "./tts/textToSpeech.js";
 const OllamaChat = () => {
-  const character = { name: "Claude", age: 25, occupation: "student", workplace: "Nursing home", personality: "shy and introverted" };
+  const character = {
+    name: "Claude",
+    age: 25,
+    occupation: "student",
+    workplace: "sykehjem",
+    personality: "shy og introverted",
+  };
   const exampleData = [
     {
       role: "system",
-      content: `Lets roleplay. Your character is ${character.name}, who is ${character.age} years old. You are a ${character.personality} ${character.occupation} who has been coming late to work at the ${character.workplace} the past month. You are called into a supervision meeting with you supervisor to answer some questions about your absense. You are nervous and anxious about the meeting. answer accordingly. if you dont know the answer, just say you dont know.`,
+      content: `La oss rollespille. Din karakter er ${character.name}, som er ${character.age} år gammel. Du er en ${character.personality} ${character.occupation} som har jobbet på et ${character.workplace} de siste to månedene. Du har kommet for sent til jobb de siste ukene og blir kalt inn til et møte med din veileder for å svare på noen spørsmål om din fravær. Du er nervøs og engstelig for møtet. Svar deretter. Hvis du ikke vet svaret, bare si at du ikke vet.`,
+
+      engelskContent: `Lets roleplay. Your character is ${character.name}, who is ${character.age} years old. You are a ${character.personality} ${character.occupation} who has been coming late to work at the ${character.workplace} the past month. You are called into a supervision meeting with you supervisor to answer some questions about your absense. You are nervous and anxious about the meeting. answer accordingly. if you dont know the answer, just say you dont know.`,
     },
     {
       role: "assistant",
-      content: "Hello... What did you want to talk about today?",
+      content: "Hei... Hva ville du snakke om i dag?",
     },
   ];
   const [messageLog, setMessageLog] = useState(exampleData);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
+  const [audioResponse, setAudioResponse] = useState(null);
   const handleSendMessage = async () => {
     setIsLoading(true);
 
@@ -60,10 +69,16 @@ const OllamaChat = () => {
 
     setInputMessage(""); // Clear the input field
   };
+  const handleAudioResponse = async (LlmResponse) => {
+    const audioBlob = await generateSpeech(LlmResponse, "ash");
 
+    const url = URL.createObjectURL(audioBlob);
+
+    setAudioResponse(url);
+  };
   const streamMessage = (chunk) => {
-    console.log("Message returned from server: ", chunk);
-
+    //console.log("Message returned from server: ", chunk);
+    handleAudioResponse(chunk);
     setMessageLog((prevMessageLog) => {
       const updatedMessageLog = [
         ...prevMessageLog,
@@ -73,7 +88,7 @@ const OllamaChat = () => {
         },
       ];
 
-      console.log("Message log updated: ", updatedMessageLog);
+      //console.log("Message log updated: ", updatedMessageLog);
       return updatedMessageLog;
     });
   };
@@ -88,7 +103,14 @@ const OllamaChat = () => {
     setInputMessage(e.target.value);
   };
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
+    <div
+      style={{
+        padding: "20px",
+        minWidth: "800px",
+        maxWidth: "1600px",
+        margin: "0 auto",
+      }}
+    >
       <h1>Ollama Chat</h1>
 
       <div
@@ -112,7 +134,10 @@ const OllamaChat = () => {
                 borderBottom: "1px solid #ccc",
               }}
             >
-              <strong>{msg.role === "assistant" ? character.name : msg.role}:</strong> {msg.content}
+              <strong>
+                {msg.role === "assistant" ? character.name : msg.role}:
+              </strong>{" "}
+              {msg.content}
             </div>
           ))}
       </div>
@@ -140,6 +165,9 @@ const OllamaChat = () => {
         <button onClick={handleSendMessage} disabled={isLoading}>
           Send
         </button>
+      </div>
+      <div>
+        {!audioResponse ? <></> : <audio src={audioResponse} controls />}
       </div>
     </div>
   );

@@ -1,35 +1,32 @@
 import React, { useState } from "react";
 import "../styling/homePage.css";
-import SupervisionSimulation from "./welcomeForm";
+import SupervisionSimulation from "./supervisionSim";
+import WelcomeForm from "./welcomeForm";
 import ToggleButton from "./button";
 
+/*
+-----------------------------------------------------
+Change the true false states in the button!
+
+
+----------------------------------------------------
+*/
 const HomePage = () => {
   
-  const WelcomeForm = () => {
-    return (
-      <>
-        <h2>Start simulation</h2>
-      </>
-    );
-  };
-  const test = {
-    name: "trueState",
-    reactComp: <WelcomeForm />,
-  };
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
       <ToggleButton
-        trueState={{
+        falseState={{
           text: "Start",
           component: <WelcomeForm />,
         }}
-        falseState={{
+        trueState={{
           text: "Stop",
-          component:<SupervisionSimulation />
+          component: <SupervisionSimulation />,
         }}
       />
-      <main id="mainWindow"></main>
+      
     </div>
   );
 };
