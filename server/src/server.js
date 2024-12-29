@@ -39,7 +39,7 @@ app.post("/api/testOllamaChat", async (req, res) => {
   console.log("Starting Ollama chat");
   
   const response = await ollama.chat({
-    model: "llama3.1",
+    model: body.model,
     messages: body.messageLog,
     stream: true,
   });
