@@ -5,13 +5,23 @@ const AudioRecorder = () => {
   const mediaStream = useRef(null);
   const mediaRecorder = useRef(null);
   const chunks = useRef([]);
+  const audioContext = useRef(null);
+  const analyser = useRef(null);
+  const silenceTimeout = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
 
   const startRecording = async () => {
-    setIsRecording(true)
+    setIsRecording(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStream.current = stream;
+
+      // Initialize Web Audio API for silence detection
+      audioContext.current = new AudioContext();
+      const source = audioContext.current.createMediaStreamSource(stream);
+      analyser.current = audioContext.current.createAnalyser();
+      source.connect(analyser.current);
+      analyser.current.fftSize = 256;
 
       mediaRecorder.current = new MediaRecorder(stream);
       mediaRecorder.current.ondataavailable = (e) => {
@@ -26,11 +36,13 @@ const AudioRecorder = () => {
         setRecordedAudios((prev) => [...prev, url]); // Add the audio URL to the array
 
         chunks.current = [];
+        stopSilenceDetection();
       };
 
       mediaRecorder.current.start();
+      startSilenceDetection();
     } catch (error) {
-        setIsRecording(false)
+      setIsRecording(false);
       console.error("Error accessing microphone:", error);
     }
   };
@@ -38,10 +50,49 @@ const AudioRecorder = () => {
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
-      setIsRecording(false)
+      setIsRecording(false);
     }
     if (mediaStream.current) {
       mediaStream.current.getTracks().forEach((track) => track.stop());
+    }
+    stopSilenceDetection();
+  };
+
+  const startSilenceDetection = () => {
+    const bufferLength = analyser.current.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const detectSilence = () => {
+      analyser.current.getByteTimeDomainData(dataArray);
+
+      const isSilent = dataArray.every((value) => Math.abs(value - 128) < 5); // Silence threshold
+
+      if (isSilent) {
+        if (!silenceTimeout.current) {
+          silenceTimeout.current = setTimeout(() => {
+            console.log("Silence detected for 3 seconds, stopping recording.");
+            stopRecording();
+          }, 3000);
+        }
+      } else {
+        clearTimeout(silenceTimeout.current);
+        silenceTimeout.current = null;
+      }
+
+      if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
+        requestAnimationFrame(detectSilence);
+      }
+    };
+
+    detectSilence();
+  };
+
+  const stopSilenceDetection = () => {
+    clearTimeout(silenceTimeout.current);
+    silenceTimeout.current = null;
+    if (audioContext.current) {
+      audioContext.current.close();
+      audioContext.current = null;
     }
   };
 
@@ -64,7 +115,7 @@ const AudioRecorder = () => {
           minHeight: "21px",
         }}
       >
-        {isRecording ? <p>Recodring in progress...</p> : <></>}
+        {isRecording ? <p>Recording in progress...</p> : <></>}
       </div>
     </div>
   );
