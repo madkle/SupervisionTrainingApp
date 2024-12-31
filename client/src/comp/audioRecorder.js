@@ -9,6 +9,8 @@ const AudioRecorder = () => {
   const analyser = useRef(null);
   const silenceTimeout = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [useAutoStop, setUseAutoStop] = useState(false);
+  const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
 
   const startRecording = async () => {
     setIsRecording(true);
@@ -40,7 +42,7 @@ const AudioRecorder = () => {
       };
 
       mediaRecorder.current.start();
-      startSilenceDetection();
+      if (useAutoStop) startSilenceDetection();
     } catch (error) {
       setIsRecording(false);
       console.error("Error accessing microphone:", error);
@@ -70,9 +72,9 @@ const AudioRecorder = () => {
       if (isSilent) {
         if (!silenceTimeout.current) {
           silenceTimeout.current = setTimeout(() => {
-            console.log("Silence detected for 3 seconds, stopping recording.");
+            console.log(`Silence detected for ${silenceDuration} seconds, stopping recording.`);
             stopRecording();
-          }, 3000);
+          }, silenceDuration * 1000);
         }
       } else {
         clearTimeout(silenceTimeout.current);
@@ -106,6 +108,30 @@ const AudioRecorder = () => {
           </div>
         ))}
       </section>
+
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={useAutoStop}
+            onChange={(e) => setUseAutoStop(e.target.checked)}
+          />
+          Enable Automatic Stop
+        </label>
+        {useAutoStop && (
+          <div>
+            <label>
+              Silence Duration (seconds):
+              <input
+                type="number"
+                min="1"
+                value={silenceDuration}
+                onChange={(e) => setSilenceDuration(Number(e.target.value))}
+              />
+            </label>
+          </div>
+        )}
+      </div>
 
       <button onClick={startRecording}>Start Recording</button>
       <button onClick={stopRecording}>Stop Recording</button>
