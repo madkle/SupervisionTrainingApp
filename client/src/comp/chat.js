@@ -20,11 +20,15 @@ const OllamaChat = () => {
       content: "Hei... Hva ville du snakke om i dag?",
     },
   ];
+  //Chat message
   const [messageLog, setMessageLog] = useState(exampleData);
   const [inputMessage, setInputMessage] = useState("");
+  //booleans
   const [isLoading, setIsLoading] = useState(false);
-  const inputRef = useRef(null);
+  //AUDIO
   const [audioResponse, setAudioResponse] = useState(null);
+  const [audioLog, setAudioLog] = useState([]);
+
   const handleSendMessage = async () => {
     setIsLoading(true);
 
@@ -74,11 +78,15 @@ const OllamaChat = () => {
 
     const url = URL.createObjectURL(audioBlob);
 
+    setAudioLog((prevAudioLog) => [...prevAudioLog, url]);
+    console.log("Audio response URL: ");
+    console.log(audioLog);
+
     setAudioResponse(url);
   };
   const streamMessage = (chunk) => {
-    //console.log("Message returned from server: ", chunk);
-    handleAudioResponse(chunk);
+    console.log("Message returned from server: ", chunk);
+    //handleAudioResponse(chunk);
     setMessageLog((prevMessageLog) => {
       const updatedMessageLog = [
         ...prevMessageLog,
@@ -151,7 +159,6 @@ const OllamaChat = () => {
         }}
       >
         <input
-          ref={inputRef}
           type="text"
           value={inputMessage}
           onChange={handleInputChange}
@@ -168,6 +175,25 @@ const OllamaChat = () => {
       </div>
       <div>
         {!audioResponse ? <></> : <audio src={audioResponse} controls />}
+      </div>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        {!audioLog ? (
+          <></>
+        ) : (
+          audioLog.map((audioUrl, index) => (
+            <div style={{ display: "flex" }}>
+              <p>{index}:</p> <audio src={audioUrl} controls />
+              <br />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
