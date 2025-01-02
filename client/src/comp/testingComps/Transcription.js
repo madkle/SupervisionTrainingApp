@@ -7,11 +7,15 @@ const Transcription = () => {
   const transcribeAudio = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/transcribe", {
+      const response = await fetch("/api/transcribeLocalAudio", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Optional for POST with no body
         },
+        body: JSON.stringify({
+          audioFile: "/path/to/audio/file",
+          model: "whisper-1",
+        }),
       });
 
       if (!response.ok) {

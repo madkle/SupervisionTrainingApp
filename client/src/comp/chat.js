@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { generateSpeech } from "./textToSpeech.js";
+import { generateSpeech } from "./functionality/textToSpeech";
 const OllamaChat = () => {
   const character = {
     name: "Claude",

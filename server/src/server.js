@@ -54,32 +54,7 @@ app.post("/api/testOllamaChat", async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-app.post("/api/streamTest", async (req, res) => {
-  res.setHeader("Content-Type", "text/plain; charset=utf-8");
-  res.setHeader("Transfer-Encoding", "chunked");
-  res.flushHeaders();
-
-  const text =
-    "This is a test of true streaming. Each word streams incrementally to the client.";
-  const words = text.split(" "); // Split text into words
-  const delay = 500; // Delay in ms between sending each word
-
-  for (const word of words) {
-    res.write(word + " "); // Send one word at a time
-    console.log(`Sent: ${word}`);
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-
-  res.end(); // End the response stream
-});
-
+/*
 app.post("/api/ollamaChat", async (req, res) => {
   try {
     console.log("Starting Ollama chat");
@@ -108,7 +83,7 @@ app.post("/api/ollamaChat", async (req, res) => {
     res.status(500).send("Error generating chat response.");
   }
 });
-
+*/
 app.post("/api/ollama", async (req, res) => {
   try {
     console.log("Starting Ollama with streaming...");
@@ -185,8 +160,45 @@ app.post("/api/save-audio", upload.single("file"), (req, res) => {
   }
 });
 
+app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
+  try {
+    // Access the uploaded file and form data
+    const audioFilePath = req.file.path;
+    const AIModel = req.body.model;
+
+    console.log(`File received: ${audioFilePath}`);
+    console.log(`Model selected: ${AIModel}`);
+
+    // Create a readable stream from the uploaded file
+    const audioFile = fs.createReadStream(audioFilePath);
+
+    // Send audio file to OpenAI for transcription
+    const transcription = await openai.audio.transcriptions.create({
+      file: audioFile,
+      model: AIModel,
+    });
+
+    // Clean up the uploaded file to avoid storage issues
+    fs.unlinkSync(audioFilePath);
+
+    // Send transcription result back to client
+    res.json({ transcription: transcription.text });
+  } catch (error) {
+    console.error('Error transcribing audio:', error);
+
+    // Clean up the uploaded file in case of errors
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(500).send('Error transcribing audio');
+  }
+});
+
+
+
 // Route for transcription
-app.post("/api/transcribe", async (req, res) => {
+app.post("/api/transcribeLocalAudio", async (req, res) => {
   try {
     const audioFilePath = path.join(DOWNLOADS_DIR, "recorded-audio.webm");
 

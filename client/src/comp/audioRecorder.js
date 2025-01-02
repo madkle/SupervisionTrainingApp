@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { handleSpeechToText } from "./functionality/speechToText.js";
+
 
 const AudioRecorder = () => {
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
@@ -36,7 +38,8 @@ const AudioRecorder = () => {
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
         setRecordedAudios((prev) => [...prev, url]); // Add the audio URL to the array
-
+        // Pass the Blob to the transcription function
+        handleSpeechToText(recordedBlob, "whisper-1");
         chunks.current = [];
         stopSilenceDetection();
       };
@@ -72,7 +75,9 @@ const AudioRecorder = () => {
       if (isSilent) {
         if (!silenceTimeout.current) {
           silenceTimeout.current = setTimeout(() => {
-            console.log(`Silence detected for ${silenceDuration} seconds, stopping recording.`);
+            console.log(
+              `Silence detected for ${silenceDuration} seconds, stopping recording.`
+            );
             stopRecording();
           }, silenceDuration * 1000);
         }
@@ -81,7 +86,10 @@ const AudioRecorder = () => {
         silenceTimeout.current = null;
       }
 
-      if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
+      if (
+        mediaRecorder.current &&
+        mediaRecorder.current.state === "recording"
+      ) {
         requestAnimationFrame(detectSilence);
       }
     };

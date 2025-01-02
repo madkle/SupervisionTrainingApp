@@ -10,7 +10,6 @@ const TestingSuite = () => {
   return (
     <div>
       <OllamaChat/>
-      <StreamTest />
       <Llm />
       <Tts />
       <Transcription />
