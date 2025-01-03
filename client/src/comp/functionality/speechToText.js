@@ -10,14 +10,14 @@ export const handleSpeechToText = async (audioBlob, model) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to generate speech");
+      throw new Error("Failed to generate text from speech");
     }
 
     const data = await response.json();
-    console.log(data.transcription);
+    //console.log(data.transcription);
     return data.transcription;
   } catch (error) {
-    console.error("Error generating speech:", error);
-    alert("An error occurred while generating the speech.");
+    console.error("Error generate text from speech:", error);
+    alert("An error occurred while generating text from speech.");
   }
 };

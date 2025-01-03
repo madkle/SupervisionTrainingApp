@@ -30,28 +30,23 @@ app.use(express.json());
 
 
 
-app.post("/api/testOllamaChat", async (req, res) => {
+app.post("/api/ollamaChat", async (req, res) => {
   const body = req.body;
   console.log(body.messageLog);
   
-  res.setHeader("Content-Type", "text/plain; charset=utf-8");
-  res.setHeader("Transfer-Encoding", "chunked");
   console.log("Starting Ollama chat");
   
   const response = await ollama.chat({
-    model: body.model,
-    messages: body.messageLog,
-    stream: true,
+      model: body.model,
+      messages: body.messageLog,
+      stream: false, // Set stream to false to avoid streaming
   });
 
-  for await (const part of response) {
-    res.write(part.message.content);
-  }
-  console.log("done");
-  
-  
-  res.end();
+  res.setHeader("Content-Type", "application/json");
+  res.json(response); // Send the entire response once it's ready
+  console.log("Chat complete");
 });
+
 
 
 /*

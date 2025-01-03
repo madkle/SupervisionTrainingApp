@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import { handleSpeechToText } from "./functionality/speechToText.js";
-
-
+import { callChatAPI,exampleData } from "./functionality/ollamaChat.js";
+import {handleAudioResponse} from "./functionality/audioHanlder.js";
 const AudioRecorder = () => {
+  const [messageLog, setMessageLog] = useState(exampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
   const mediaStream = useRef(null);
   const mediaRecorder = useRef(null);
@@ -13,7 +14,9 @@ const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [useAutoStop, setUseAutoStop] = useState(false);
   const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
-
+  let transcription = "";
+  //AUDIO
+    const [audioLog, setAudioLog] = useState([]);
   const startRecording = async () => {
     setIsRecording(true);
     try {
@@ -34,12 +37,13 @@ const AudioRecorder = () => {
         }
       };
 
-      mediaRecorder.current.onstop = () => {
+      mediaRecorder.current.onstop = async () => {
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
         setRecordedAudios((prev) => [...prev, url]); // Add the audio URL to the array
         // Pass the Blob to the transcription function
-        handleSpeechToText(recordedBlob, "whisper-1");
+        transcription = await handleSpeechToText(recordedBlob, "whisper-1");
+        handleChat(); // Pass the updated value 
         chunks.current = [];
         stopSilenceDetection();
       };
@@ -51,6 +55,49 @@ const AudioRecorder = () => {
       console.error("Error accessing microphone:", error);
     }
   };
+  
+  const handleChat = async () => {
+    
+    console.log(transcription);
+    
+    if (transcription !== "") {
+      console.log("Transcription:", transcription);
+      const message = transcription;
+      const model = "llama3.1";
+    
+        const updatedMessageLog = [
+          ...messageLog,
+          {
+            role: "user",
+            content: message,
+          },
+        ];
+    
+        setMessageLog(updatedMessageLog);
+       
+        handleServerMessage(await callChatAPI(updatedMessageLog, model));
+      transcription = "";
+    }
+  };
+
+  const handleServerMessage = async (serverResponse) => {
+      const message = serverResponse.message;
+      console.log("Message returned from server: ", serverResponse);
+      
+      const audioURL = await handleAudioResponse(message.content);
+      setAudioLog((prevAudioLog) => [...prevAudioLog, audioURL]);
+    
+  
+      setMessageLog((prevMessageLog) => {
+        const updatedMessageLog = [
+          ...prevMessageLog,
+          message,
+        ];
+        //console.log("Message log updated: ", updatedMessageLog);
+        return updatedMessageLog;
+      });
+    };
+
 
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
@@ -150,6 +197,26 @@ const AudioRecorder = () => {
         }}
       >
         {isRecording ? <p>Recording in progress...</p> : <></>}
+      </div>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        {!audioLog ? (
+          <></>
+        ) : (
+          audioLog.map((audioUrl, index) => (
+            <div key={`Audioresponse ${index}`} style={{ display: "flex" }}>
+              <p>{index}:</p> {audioLog.length === index+1? <audio src={audioUrl} controls autoPlay/>:<audio src={audioUrl} controls />
+              }
+              <br />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

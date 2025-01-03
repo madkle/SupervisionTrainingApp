@@ -1,25 +1,9 @@
 import React, { useState, useRef } from "react";
 import { generateSpeech } from "./functionality/textToSpeech";
+import { callChatAPI,character,exampleData } from "./functionality/ollamaChat.js";
+import {handleAudioResponse} from "./functionality/audioHanlder.js";
 const OllamaChat = () => {
-  const character = {
-    name: "Claude",
-    age: 25,
-    occupation: "student",
-    workplace: "sykehjem",
-    personality: "shy og introvert",
-  };
-  const exampleData = [
-    {
-      role: "system",
-      content: `La oss spille et rollespill. Din karakter er ${character.name}, som er ${character.age} år gammel. Du er en ${character.personality} ${character.occupation} som har jobbet på et ${character.workplace} de siste to månedene. Du har kommet for sent til jobb de siste ukene og blir kalt inn til et møte med din veileder for å svare på noen spørsmål om din fravær. Du er nervøs og engstelig for møtet. Svar deretter. Snakk til meg som om jeg er veiledern din. Hvis du ikke vet svaret, bare si at du ikke vet.Du er norsk, svar med god norsk bokmål.`,
-
-      engelskContent: `Lets roleplay. Your character is ${character.name}, who is ${character.age} years old. You are a ${character.personality} ${character.occupation} who has been coming late to work at the ${character.workplace} the past month. You are called into a supervision meeting with you supervisor to answer some questions about your absense. You are nervous and anxious about the meeting. answer accordingly. if you dont know the answer, just say you dont know.`,
-    },
-    {
-      role: "assistant",
-      content: "Hei... Hva ville du snakke om i dag?",
-    },
-  ];
+  
   //Chat message
   const [messageLog, setMessageLog] = useState(exampleData);
   const [inputMessage, setInputMessage] = useState("");
@@ -44,59 +28,26 @@ const OllamaChat = () => {
     ];
 
     setMessageLog(updatedMessageLog);
-
-    const response = await fetch(`/api/testOllamaChat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json, text/plain, ",
-      },
-      body: JSON.stringify({ messageLog: updatedMessageLog, model: llmModel }),
-    });
-
-    if (!response.ok || !response.body) {
-      throw response.statusText;
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        setIsLoading(false);
-        break;
-      }
-      const chunk = decoder.decode(value, { stream: true });
-      streamMessage(chunk);
-    }
-
+   
+    handleServerMessage(await callChatAPI(updatedMessageLog, llmModel));
+    
     setInputMessage(""); // Clear the input field
   };
-  const handleAudioResponse = async (LlmResponse) => {
-    const audioBlob = await generateSpeech(LlmResponse, "ash");
+  
+  const handleServerMessage = async (serverResponse) => {
+    const message = serverResponse.message;
+    console.log("Message returned from server: ", serverResponse);
+    
+    const audioURL = await handleAudioResponse(message.content);
+    setAudioLog((prevAudioLog) => [...prevAudioLog, audioURL]);
+    setAudioResponse(audioURL);
 
-    const url = URL.createObjectURL(audioBlob);
-
-    setAudioLog((prevAudioLog) => [...prevAudioLog, url]);
-    console.log("Audio response URL: ");
-    console.log(audioLog);
-
-    setAudioResponse(url);
-  };
-  const streamMessage = (chunk) => {
-    console.log("Message returned from server: ", chunk);
-    //handleAudioResponse(chunk);
     setMessageLog((prevMessageLog) => {
       const updatedMessageLog = [
         ...prevMessageLog,
-        {
-          role: "assistant",
-          content: chunk,
-        },
+        message,
       ];
-
+      setIsLoading(false);
       //console.log("Message log updated: ", updatedMessageLog);
       return updatedMessageLog;
     });
