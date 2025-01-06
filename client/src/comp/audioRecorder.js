@@ -13,6 +13,7 @@ const AudioRecorder = () => {
   const silenceTimeout = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const [useAutoStop, setUseAutoStop] = useState(false);
+  const [isWaitingForServer, setIsWaitingForServer] = useState(false);
   const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
   let transcription = "";
   //AUDIO
@@ -38,6 +39,7 @@ const AudioRecorder = () => {
       };
 
       mediaRecorder.current.onstop = async () => {
+        setIsWaitingForServer(true)
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
         setRecordedAudios((prev) => [...prev, url]); // Add the audio URL to the array
@@ -93,6 +95,7 @@ const AudioRecorder = () => {
           ...prevMessageLog,
           message,
         ];
+        setIsWaitingForServer(false);
         //console.log("Message log updated: ", updatedMessageLog);
         return updatedMessageLog;
       });
@@ -188,8 +191,8 @@ const AudioRecorder = () => {
         )}
       </div>
 
-      <button onClick={startRecording}>Start Recording</button>
-      <button onClick={stopRecording}>Stop Recording</button>
+      <button onClick={startRecording} disabled={isWaitingForServer}>Start Recording</button>
+      <button onClick={stopRecording} disabled={isWaitingForServer}>Stop Recording</button>
       <div
         style={{
           margin: "16px 0",
@@ -197,6 +200,7 @@ const AudioRecorder = () => {
         }}
       >
         {isRecording ? <p>Recording in progress...</p> : <></>}
+        {isWaitingForServer ? <p>Waiting for response...</p> : <></>}
       </div>
       <div
         style={{

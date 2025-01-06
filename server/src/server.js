@@ -32,7 +32,6 @@ app.use(express.json());
 
 app.post("/api/ollamaChat", async (req, res) => {
   const body = req.body;
-  console.log(body.messageLog);
   
   console.log("Starting Ollama chat");
   
