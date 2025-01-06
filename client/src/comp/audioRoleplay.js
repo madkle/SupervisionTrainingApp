@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { handleSpeechToText } from "./functionality/speechToText.js";
-import { callChatAPI,exampleData } from "./functionality/ollamaChat.js";
-import {handleAudioResponse} from "./functionality/audioHanlder.js";
+import { callChatAPI, exampleData } from "./functionality/ollamaChat.js";
+import { handleAudioResponse } from "./functionality/audioHanlder.js";
 const AudioRecorder = () => {
   const [messageLog, setMessageLog] = useState(exampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
@@ -17,7 +17,7 @@ const AudioRecorder = () => {
   const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
   let transcription = "";
   //AUDIO
-    const [audioLog, setAudioLog] = useState([]);
+  const [audioLog, setAudioLog] = useState([]);
   const startRecording = async () => {
     setIsRecording(true);
     try {
@@ -39,13 +39,15 @@ const AudioRecorder = () => {
       };
 
       mediaRecorder.current.onstop = async () => {
-        setIsWaitingForServer(true)
+        setIsWaitingForServer(true);
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
-        setRecordedAudios((prev) => [...prev, url]); // Add the audio URL to the array
         // Pass the Blob to the transcription function
         transcription = await handleSpeechToText(recordedBlob, "whisper-1");
-        handleChat(); // Pass the updated value 
+        handleChat(); // Pass the updated value
+
+        setRecordedAudios((prev) => [...prev, { url, transcription }]); // Add the audio URL to the array
+
         chunks.current = [];
         stopSilenceDetection();
       };
@@ -57,50 +59,47 @@ const AudioRecorder = () => {
       console.error("Error accessing microphone:", error);
     }
   };
-  
+
   const handleChat = async () => {
-    
     console.log(transcription);
-    
+
     if (transcription !== "") {
       console.log("Transcription:", transcription);
       const message = transcription;
       const model = "llama3.1";
-    
-        const updatedMessageLog = [
-          ...messageLog,
-          {
-            role: "user",
-            content: message,
-          },
-        ];
-    
-        setMessageLog(updatedMessageLog);
-       
-        handleServerMessage(await callChatAPI(updatedMessageLog, model));
+
+      const updatedMessageLog = [
+        ...messageLog,
+        {
+          role: "user",
+          content: message,
+        },
+      ];
+
+      setMessageLog(updatedMessageLog);
+
+      handleServerMessage(await callChatAPI(updatedMessageLog, model));
       transcription = "";
     }
   };
 
   const handleServerMessage = async (serverResponse) => {
-      const message = serverResponse.message;
-      console.log("Message returned from server: ", serverResponse);
-      
-      const audioURL = await handleAudioResponse(message.content);
-      setAudioLog((prevAudioLog) => [...prevAudioLog, audioURL]);
-    
-  
-      setMessageLog((prevMessageLog) => {
-        const updatedMessageLog = [
-          ...prevMessageLog,
-          message,
-        ];
-        setIsWaitingForServer(false);
-        //console.log("Message log updated: ", updatedMessageLog);
-        return updatedMessageLog;
-      });
-    };
+    const message = serverResponse.message;
+    console.log("Message returned from server: ", serverResponse);
 
+    const audioURL = await handleAudioResponse(message.content);
+    setAudioLog((prevAudioLog) => [
+      ...prevAudioLog,
+      { url: audioURL, text: message.content },
+    ]);
+
+    setMessageLog((prevMessageLog) => {
+      const updatedMessageLog = [...prevMessageLog, message];
+      setIsWaitingForServer(false);
+      //console.log("Message log updated: ", updatedMessageLog);
+      return updatedMessageLog;
+    });
+  };
 
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
@@ -160,9 +159,10 @@ const AudioRecorder = () => {
     <div>
       <h2>Available Recordings:</h2>
       <section>
-        {recordedAudios.map((audioUrl, index) => (
+        {recordedAudios.map((currentAudio, index) => (
           <div key={index}>
-            <audio controls src={audioUrl}></audio>
+            <audio controls src={currentAudio.url}></audio>
+            <p>Transcription: {currentAudio.transcription}</p>
           </div>
         ))}
       </section>
@@ -191,8 +191,12 @@ const AudioRecorder = () => {
         )}
       </div>
 
-      <button onClick={startRecording} disabled={isWaitingForServer}>Start Recording</button>
-      <button onClick={stopRecording} disabled={isWaitingForServer}>Stop Recording</button>
+      <button onClick={startRecording} disabled={isWaitingForServer}>
+        Start Recording
+      </button>
+      <button onClick={stopRecording} disabled={isWaitingForServer}>
+        Stop Recording
+      </button>
       <div
         style={{
           margin: "16px 0",
@@ -213,12 +217,19 @@ const AudioRecorder = () => {
         {!audioLog ? (
           <></>
         ) : (
-          audioLog.map((audioUrl, index) => (
-            <div key={`Audioresponse ${index}`} style={{ display: "flex" }}>
-              <p>{index}:</p> {audioLog.length === index+1? <audio src={audioUrl} controls autoPlay/>:<audio src={audioUrl} controls />
-              }
-              <br />
-            </div>
+          audioLog.map((currentAudio, index) => (
+            <>
+              <div key={`Audioresponse ${index}`} style={{ display: "flex" }}>
+                <p>{index}:</p>{" "}
+                {audioLog.length === index + 1 ? (
+                  <audio src={currentAudio.url} controls autoPlay />
+                ) : (
+                  <audio src={currentAudio.url} controls />
+                )}
+                <br />
+              </div>
+              <p>{currentAudio.text}</p>
+            </>
           ))
         )}
       </div>
