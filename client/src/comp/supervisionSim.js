@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styling/supervisionSim.css";
 import OllamaChat from "./chat";
-import AudioRecorder from "./audioRecorder";
+import AudioRoleplayer from "./audioRoleplay";
 import ToggleButton from "./button";
 
 const SupervisionSimulation = () => {
@@ -12,7 +12,7 @@ const SupervisionSimulation = () => {
       <ToggleButton
         falseState={{
           text: "Text Chat",
-          component: <AudioRecorder />,
+          component: <AudioRoleplayer />,
         }}
         trueState={{
           text: "Voice Chat",
