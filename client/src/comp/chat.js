@@ -11,6 +11,7 @@ const OllamaChat = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [audioLog, setAudioLog] = useState([]);
     const audioCache = useState(new Map())[0];
+    const AIVoice = "alloy";
 
     const llmModel = "llama3.1";
 
@@ -29,7 +30,7 @@ const OllamaChat = () => {
         const message = serverResponse.message;
         console.log("Message returned from server: ", message);
 
-        const audioURL = await handleAudioResponse(message.content);
+        const audioURL = await handleAudioResponse(message.content,AIVoice);
         setAudioLog((prevAudioLog) => [...prevAudioLog, { message: message.content, audioURL }]);
 
         audioCache.set(message.content, audioURL);

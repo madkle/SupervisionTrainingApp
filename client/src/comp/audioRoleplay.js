@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import { handleSpeechToText } from "./functionality/speechToText.js";
 import { callChatAPI, exampleData } from "./functionality/ollamaChat.js";
 import { handleAudioResponse } from "./functionality/audioHanlder.js";
+
+import "../styling/audioRoleplay.css";
 const AudioRecorder = () => {
   const [messageLog, setMessageLog] = useState(exampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
@@ -16,6 +18,7 @@ const AudioRecorder = () => {
   const [isWaitingForServer, setIsWaitingForServer] = useState(false);
   const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
   let transcription = "";
+  const AIVoice = "alloy";
   //AUDIO
   const [audioLog, setAudioLog] = useState([]);
   const startRecording = async () => {
@@ -87,7 +90,7 @@ const AudioRecorder = () => {
     const message = serverResponse.message;
     console.log("Message returned from server: ", serverResponse);
 
-    const audioURL = await handleAudioResponse(message.content);
+    const audioURL = await handleAudioResponse(message.content, AIVoice);
     setAudioLog((prevAudioLog) => [
       ...prevAudioLog,
       { url: audioURL, text: message.content },
@@ -156,7 +159,7 @@ const AudioRecorder = () => {
   };
 
   return (
-    <div>
+    <div className="audio-recorder">
       <h2>Available Recordings:</h2>
       <section>
         {recordedAudios.map((currentAudio, index) => (
@@ -218,8 +221,8 @@ const AudioRecorder = () => {
           <></>
         ) : (
           audioLog.map((currentAudio, index) => (
-            <>
-              <div key={`Audioresponse ${index}`} style={{ display: "flex" }}>
+            <div key={`Audioresponse ${index}`}>
+              <section  style={{ display: "flex" }}>
                 <p>{index}:</p>{" "}
                 {audioLog.length === index + 1 ? (
                   <audio src={currentAudio.url} controls autoPlay />
@@ -227,9 +230,9 @@ const AudioRecorder = () => {
                   <audio src={currentAudio.url} controls />
                 )}
                 <br />
-              </div>
+              </section>
               <p>{currentAudio.text}</p>
-            </>
+            </div>
           ))
         )}
       </div>
