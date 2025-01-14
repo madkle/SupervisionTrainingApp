@@ -4,22 +4,26 @@ import OllamaChat from "./chat";
 import AudioRoleplayer from "./audioRoleplay";
 import ToggleButton from "./button";
 
-const SupervisionSimulation = () => {
-  return (
-    <main id="mainWindow">
-      <h2>Simulation Started!</h2>
 
-      <ToggleButton
-        falseState={{
-          text: "Text Chat",
-          component: <AudioRoleplayer />,
-        }}
-        trueState={{
-          text: "Voice Chat",
-          component: <OllamaChat />,
-        }}
-      />
-    </main>
+const SupervisionSimulation = (ConversationLanguage) => {
+  
+  return (
+    <>
+      
+      <section id="mainWindow">
+        <p>Toggle between text chat and audio chat:</p>
+        <ToggleButton
+          falseState={{
+            text: "Text Chat",
+            component: <AudioRoleplayer language={ConversationLanguage} />,
+          }}
+          trueState={{
+            text: "Voice Chat",
+            component: <OllamaChat language={ConversationLanguage} />,
+          }}
+        />
+      </section>
+    </>
   );
 };
 export default SupervisionSimulation;

@@ -5,7 +5,8 @@ import { callChatAPI, character, exampleData } from "./functionality/ollamaChat.
 import { handleAudioResponse } from "./functionality/audioHanlder.js";
 import '../styling/OllamaChat.css';
 
-const OllamaChat = () => {
+const OllamaChat = (selectedLanguage) => {
+    console.log(selectedLanguage);
     const [messageLog, setMessageLog] = useState(exampleData);
     const [inputMessage, setInputMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);

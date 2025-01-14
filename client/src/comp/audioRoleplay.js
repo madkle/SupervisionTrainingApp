@@ -4,7 +4,9 @@ import { callChatAPI, exampleData } from "./functionality/ollamaChat.js";
 import { handleAudioResponse } from "./functionality/audioHanlder.js";
 
 import "../styling/audioRoleplay.css";
-const AudioRecorder = () => {
+const AudioRecorder = (selectedLanguage) => {
+  console.log(selectedLanguage);
+  
   const [messageLog, setMessageLog] = useState(exampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
   const mediaStream = useRef(null);
