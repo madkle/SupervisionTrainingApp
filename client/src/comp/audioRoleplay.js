@@ -5,9 +5,12 @@ import { handleAudioResponse } from "./functionality/audioHanlder.js";
 
 import "../styling/audioRoleplay.css";
 const AudioRecorder = (selectedLanguage) => {
-  console.log(selectedLanguage);
-  
-  const [messageLog, setMessageLog] = useState(exampleData);
+  const selectedExampleData =
+    selectedLanguage === "norwegian"
+      ? exampleData.english
+      : exampleData.norwegian;
+
+  const [messageLog, setMessageLog] = useState(selectedExampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
   const mediaStream = useRef(null);
   const mediaRecorder = useRef(null);
@@ -224,7 +227,7 @@ const AudioRecorder = (selectedLanguage) => {
         ) : (
           audioLog.map((currentAudio, index) => (
             <div key={`Audioresponse ${index}`}>
-              <section  style={{ display: "flex" }}>
+              <section style={{ display: "flex" }}>
                 <p>{index}:</p>{" "}
                 {audioLog.length === index + 1 ? (
                   <audio src={currentAudio.url} controls autoPlay />

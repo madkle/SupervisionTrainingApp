@@ -28,40 +28,68 @@ const NorwegianWarning = () => {
   );
 };
 const HomePage = () => {
-  const availableLanguages = ["Norwegian", "English"];
+  const availableLanguages = ["norwegian", "english"];
   const [language, setLanguage] = useState(availableLanguages[0]);
-
+  const [toggle, setButton] = useState(false);
+  const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const changeState = () => {
+    setButton(!toggle);
+    setIsSimulationRunning(!toggle);
+  };
+  const LanguageSelector = () => {
+    return (
+      <>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <p>Choose language</p>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            {availableLanguages.map((lang, i) => (
+              <option key={"language" + i} value={lang}>
+                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+        {language === "norwegian" && <NorwegianWarning />}
+      </>
+    );
+  };
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <p>Choose language</p>
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-          {availableLanguages.map((lang) => (
-            <option value={lang}>{lang}</option>
-          ))}
-        </select>
-      </div>
-      {language === "Norwegian" && <NorwegianWarning />}
+      {!isSimulationRunning && <LanguageSelector />}
 
-      <ToggleButton
+      <button onClick={changeState}>{!toggle ? "Start" : "Stop"}</button>
+      {!toggle ? (
+        <WelcomeForm />
+      ) : (
+        <SupervisionSimulation language={language} />
+      )}
+    </div>
+  );
+};
+export default HomePage;
+
+/*
+
+<ToggleButton
         falseState={{
           text: "Stop",
-          component: <SupervisionSimulation language={language}/>,
+          component: <SupervisionSimulation language={language} />,
         }}
         trueState={{
           text: "Start",
           component: <WelcomeForm />,
         }}
       />
-    </div>
-  );
-};
-export default HomePage;
+
+*/
