@@ -69,7 +69,7 @@ const initialAudioLog = useNewChat ? JSON.parse(localStorage.getItem("audioLog")
       const audio = new Audio(cachedAudioURL);
       audio.play();
     } else {
-      const audioURL = ""//await generateSpeech(text);
+      const audioURL = await generateSpeech(text);
       audioCache.set(text, audioURL);
       const audio = new Audio(audioURL);
       audio.play();

@@ -2,13 +2,6 @@ import React, { useState } from "react";
 import "./homePage.css";
 import SupervisionSimulation from "../SupervisionSim/supervisionSim";
 
-/*
------------------------------------------------------
-Change the true false states in the button!
-
-
-----------------------------------------------------
-*/
 const NorwegianWarning = () => {
   return (
     <div
@@ -25,18 +18,15 @@ const NorwegianWarning = () => {
     </div>
   );
 };
+
 const HomePage = () => {
   const availableLanguages = ["norwegian", "english"];
   const [language, setLanguage] = useState(availableLanguages[0]);
   const [toggle, setButton] = useState(false);
-  const [useTextChat, setuseTextChat] = useState(false);
+  const [chatType, setChatType] = useState("text");
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
-
   const [useSavedChat, setUseSavedChat] = useState(false);
-  const changeState = () => {
-    setButton(!toggle);
-    setIsSimulationRunning(!toggle);
-  };
+
   const LanguageSelector = () => {
     return (
       <>
@@ -64,52 +54,86 @@ const HomePage = () => {
       </>
     );
   };
+
   const LoadSavedChat = () => {
     return (
       <section>
-        <p>Continue last saved chat</p>
-        <button onClick={toggleSavedChat}>Continue</button>
-
-        {useSavedChat && <p>Using Saved Chat</p>}
+        <label>
+          <input
+            type="checkbox"
+            checked={useSavedChat}
+            onChange={toggleSavedChat}
+          />
+          Use saved chat
+        </label>
       </section>
     );
   };
-  const TextChatToggle = () => {
-    const toggleChatType = () => {
-      setuseTextChat(!useTextChat);
-    };
+
+  const ChatTypeSelector = () => {
     return (
       <div>
         <p>Choose chat type</p>
-        <button onClick={toggleChatType}>
-          {useTextChat ? "Text Chat" : "Voice Chat"}
-        </button>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="chatType"
+              value="text"
+              checked={chatType === "text"}
+              onChange={() => setChatType("text")}
+            />
+            Text Chat
+          </label>
+          <label style={{ marginLeft: "1rem" }}>
+            <input
+              type="radio"
+              name="chatType"
+              value="voice"
+              checked={chatType === "voice"}
+              onChange={() => setChatType("voice")}
+            />
+            Voice Chat
+          </label>
+        </div>
       </div>
     );
   };
+
   const toggleSavedChat = () => {
     setUseSavedChat(!useSavedChat);
   };
-  const noSavedChat = localStorage.getItem("chatLog") === null;
+
+  const changeState = () => {
+    setButton(!toggle);
+    setIsSimulationRunning(!toggle);
+  };
+
+  const hasSavedChat = localStorage.getItem("chatLog") !== null;
+
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
       {!isSimulationRunning && <LanguageSelector />}
       <br />
-      {!isSimulationRunning && !noSavedChat && <LoadSavedChat />}
+      {!isSimulationRunning && hasSavedChat && <LoadSavedChat />}
       <br />
-      <TextChatToggle />
+      {!isSimulationRunning && <ChatTypeSelector />}
+      {/* Space for character selector sometime */}
+
+      {/* Space for character selector sometime */}
       <br />
       <button onClick={changeState}>{!toggle ? "Start" : "Stop"}</button>
       <br />
-
       {toggle && (
         <SupervisionSimulation
           language={language}
           useSavedChat={useSavedChat}
+          chatType={chatType}
         />
       )}
     </div>
   );
 };
+
 export default HomePage;
