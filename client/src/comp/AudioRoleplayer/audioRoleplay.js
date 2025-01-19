@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
-import { handleSpeechToText } from "./functionality/speechToText.js";
-import { callChatAPI, exampleData } from "./functionality/ollamaChat.js";
-import { handleAudioResponse } from "./functionality/audioHanlder.js";
+import { handleSpeechToText } from "../functionality/speechToText.js";
+import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
+import { handleAudioResponse } from "../functionality/audioHanlder.js";
 
-import "../styling/audioRoleplay.css";
+import "./audioRoleplay.css";
 const AudioRecorder = (selectedLanguage) => {
   const selectedExampleData =
     selectedLanguage === "norwegian"

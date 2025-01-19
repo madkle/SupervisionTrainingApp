@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import "../styling/homePage.css";
-import SupervisionSimulation from "./supervisionSim";
-import WelcomeForm from "./welcomeForm";
-import ToggleButton from "./button";
+import "./homePage.css";
+import SupervisionSimulation from "../SupervisionSim/supervisionSim";
 
 /*
 -----------------------------------------------------
@@ -31,7 +29,10 @@ const HomePage = () => {
   const availableLanguages = ["norwegian", "english"];
   const [language, setLanguage] = useState(availableLanguages[0]);
   const [toggle, setButton] = useState(false);
+  const [useTextChat, setuseTextChat] = useState(false);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+
+  const [useSavedChat, setUseSavedChat] = useState(false);
   const changeState = () => {
     setButton(!toggle);
     setIsSimulationRunning(!toggle);
@@ -63,33 +64,52 @@ const HomePage = () => {
       </>
     );
   };
+  const LoadSavedChat = () => {
+    return (
+      <section>
+        <p>Continue last saved chat</p>
+        <button onClick={toggleSavedChat}>Continue</button>
+
+        {useSavedChat && <p>Using Saved Chat</p>}
+      </section>
+    );
+  };
+  const TextChatToggle = () => {
+    const toggleChatType = () => {
+      setuseTextChat(!useTextChat);
+    };
+    return (
+      <div>
+        <p>Choose chat type</p>
+        <button onClick={toggleChatType}>
+          {useTextChat ? "Text Chat" : "Voice Chat"}
+        </button>
+      </div>
+    );
+  };
+  const toggleSavedChat = () => {
+    setUseSavedChat(!useSavedChat);
+  };
+  const noSavedChat = localStorage.getItem("chatLog") === null;
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
       {!isSimulationRunning && <LanguageSelector />}
-
+      <br />
+      {!isSimulationRunning && !noSavedChat && <LoadSavedChat />}
+      <br />
+      <TextChatToggle />
+      <br />
       <button onClick={changeState}>{!toggle ? "Start" : "Stop"}</button>
-      {!toggle ? (
-        <WelcomeForm />
-      ) : (
-        <SupervisionSimulation language={language} />
+      <br />
+
+      {toggle && (
+        <SupervisionSimulation
+          language={language}
+          useSavedChat={useSavedChat}
+        />
       )}
     </div>
   );
 };
 export default HomePage;
-
-/*
-
-<ToggleButton
-        falseState={{
-          text: "Stop",
-          component: <SupervisionSimulation language={language} />,
-        }}
-        trueState={{
-          text: "Start",
-          component: <WelcomeForm />,
-        }}
-      />
-
-*/

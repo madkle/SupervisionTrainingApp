@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-
+ 
 
 const WelcomeForm = () => {
     return (
       <>
-        <h2>Start simulation</h2>
+        <h2>Welcome</h2>
       </>
     );
   };

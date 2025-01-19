@@ -1,13 +1,13 @@
 // OllamaChat.jsx
 import React, { use, useState } from "react";
-import { generateSpeech } from "./functionality/textToSpeech";
+import { generateSpeech } from "../functionality/textToSpeech.js";
 import {
   callChatAPI,
   character,
   exampleData,
-} from "./functionality/ollamaChat.js";
-import { handleAudioResponse } from "./functionality/audioHanlder.js";
-import "../styling/OllamaChat.css";
+} from "../functionality/ollamaChat.js";
+import { handleAudioResponse } from "../functionality/audioHanlder.js";
+import "./chatBox.css";
 
 const OllamaChat = (props) => {
 
@@ -15,10 +15,10 @@ const OllamaChat = (props) => {
     props.language === "norwegian"
       ? exampleData.norwegian
       : exampleData.english;
-      const useNewChat = props.newChat;
+      const useNewChat = props.useNewChat;
    
-const initialMessageLog = useNewChat ? selectedExampleData : JSON.parse(localStorage.getItem("chatLog"));
-const initialAudioLog = useNewChat ? [] : JSON.parse(localStorage.getItem("audioLog"));
+const initialMessageLog = useNewChat ? JSON.parse(localStorage.getItem("chatLog")): selectedExampleData;
+const initialAudioLog = useNewChat ? JSON.parse(localStorage.getItem("audioLog")) : [];
 
   const [messageLog, setMessageLog] = useState(initialMessageLog);
   const [audioLog, setAudioLog] = useState(initialAudioLog);
