@@ -110,7 +110,7 @@ const HomePage = () => {
   };
 
   const hasSavedChat = localStorage.getItem("chatLog") !== null;
-
+  
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
