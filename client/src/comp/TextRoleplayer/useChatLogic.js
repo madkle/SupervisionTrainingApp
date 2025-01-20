@@ -1,24 +1,24 @@
-// OllamaChat.jsx
-import React, { use, useState } from "react";
-import { generateSpeech } from "../functionality/textToSpeech.js";
+import { useState } from "react";
 import {
   callChatAPI,
   character,
   exampleData,
 } from "../functionality/ollamaChat.js";
 import { handleAudioResponse } from "../functionality/audioHanlder.js";
-import "./chatBox.css";
-
-const OllamaChat = (props) => {
-
+import { generateSpeech } from "../functionality/textToSpeech.js";
+export const useChatLogic = (props) => {
   const selectedExampleData =
     props.language === "norwegian"
       ? exampleData.norwegian
       : exampleData.english;
-      const useNewChat = props.useNewChat;
-   
-const initialMessageLog = useNewChat ? JSON.parse(localStorage.getItem("chatLog")): selectedExampleData;
-const initialAudioLog = useNewChat ? JSON.parse(localStorage.getItem("audioLog")) : [];
+
+  const useNewChat = props.useNewChat;
+  const initialMessageLog = useNewChat
+    ? JSON.parse(localStorage.getItem("chatLog"))
+    : selectedExampleData;
+  const initialAudioLog = useNewChat
+    ? JSON.parse(localStorage.getItem("audioLog"))
+    : [];
 
   const [messageLog, setMessageLog] = useState(initialMessageLog);
   const [audioLog, setAudioLog] = useState(initialAudioLog);
@@ -26,9 +26,8 @@ const initialAudioLog = useNewChat ? JSON.parse(localStorage.getItem("audioLog")
   const [isLoading, setIsLoading] = useState(false);
   const audioCache = useState(new Map())[0];
   const AIVoice = "alloy";
-
   const llmModel = "llama3.1";
-
+  const [savedMessage, setSavedMessage] = useState("");
   const handleSendMessage = async () => {
     setIsLoading(true);
     setInputMessage("");
@@ -75,62 +74,25 @@ const initialAudioLog = useNewChat ? JSON.parse(localStorage.getItem("audioLog")
       audio.play();
     }
   };
+
   const saveChat = () => {
     console.log("Chat saved!");
     localStorage.setItem("chatLog", JSON.stringify(messageLog));
     localStorage.setItem("audioLog", JSON.stringify(audioLog));
+    setSavedMessage("Chat saved!");
   };
-  return (
-    <div className="ollama-chat">
-      <h1>Ollama Chat</h1>
 
-      <div className="chat-container">
-        {messageLog
-          .filter((msg) => msg.role !== "system")
-          .map((msg, index) => (
-            <div key={index} className={`message ${msg.role}`}>
-              <strong>
-                {msg.role === "assistant" ? character.name : msg.role}:
-              </strong>{" "}
-              {msg.content}
-              {msg.role === "assistant" && (
-                <button onClick={() => handlePlayAudio(msg.content)}>
-                  Play Message
-                </button>
-              )}
-            </div>
-          ))}
-      </div>
-
-      <div className="input-container">
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={
-            isLoading ? "awaiting response..." : "Type your message here..."
-          }
-          disabled={isLoading}
-        />
-        <button onClick={handleSendMessage} disabled={isLoading}>
-          Send
-        </button>
-      </div>
-
-      <div className="audio-log">
-        {audioLog.map((entry, index) => (
-          <div key={index} className="audio-entry">
-            <p>
-              {index + 1}: {entry.message}
-            </p>
-            <audio src={entry.audioURL} controls />
-          </div>
-        ))}
-      </div>
-      <button onClick={saveChat}>Save</button>
-    </div>
-  );
+  return {
+    savedMessage,
+    messageLog,
+    audioLog,
+    inputMessage,
+    isLoading,
+    setSavedMessage,
+    setInputMessage,
+    handleSendMessage,
+    handleKeyDown,
+    handlePlayAudio,
+    saveChat,
+  };
 };
-
-export default OllamaChat;
