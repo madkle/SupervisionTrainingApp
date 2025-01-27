@@ -49,7 +49,7 @@ const AudioRecorder = () => {
     formData.append("file", blob, "recorded-audio.webm");
 
     try {
-      const response = await fetch("/api/save-audio", {
+      const response = await fetch("http://localhost:5000/api/save-audio", {
         method: "POST",
         body: formData,
       });
@@ -72,5 +72,5 @@ const AudioRecorder = () => {
     </div>
   );
 };
-
+ 
 export default AudioRecorder;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useChatLogic } from "./useChatLogic";
-import "./chatbox.css";
+import "./chatBox.css";
 
 const TextChat = (props) => {
   const {

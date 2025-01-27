@@ -4,11 +4,11 @@ export const handleSpeechToText = async (audioBlob, model) => {
     formData.append("audio", audioBlob, "recording.webm"); // Append the audio blob with a filename
     formData.append("model", model);
 
-    const response = await fetch("/api/transcribe", {
+    const response = await fetch("http://localhost:5000/api/transcribe", {
       method: "POST",
       body: formData,
     });
-
+ 
     if (!response.ok) {
       throw new Error("Failed to generate text from speech");
     }

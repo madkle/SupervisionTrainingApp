@@ -7,7 +7,7 @@ const Transcription = () => {
   const transcribeAudio = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/transcribeLocalAudio", {
+      const response = await fetch("http://localhost:5000/api/transcribeLocalAudio", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Optional for POST with no body
@@ -43,7 +43,7 @@ const Transcription = () => {
           <>
             <h3>Transcription Result:</h3>
             <p>{transcription}</p>
-          </>
+          </> 
         )}
       </div>
     </div>

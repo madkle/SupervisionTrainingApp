@@ -56,7 +56,7 @@ export const dynamicExampleData = {
 };
 
 export const callChatAPI = async (message, model) => {
-  const response = await fetch(`/api/ollamaChat`, {
+  const response = await fetch(`http://localhost:5000/api/ollamaChat`, { 
     method: "POST",
     headers: {
       "Content-Type": "application/json",

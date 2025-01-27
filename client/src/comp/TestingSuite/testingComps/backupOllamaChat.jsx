@@ -13,7 +13,7 @@ const sendMessage = async (message: string) => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json, text/plain, ",
-      },
+      }, 
       body: JSON.stringify({ message }),
     }
   );
@@ -79,7 +79,7 @@ const OllamaChat = () => {
     
     // send message to the server
     /*
-    const response = await fetch(`/api/testOllamaChat`, {
+    const response = await fetch(`http://localhost:5000/api/testOllamaChat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const OllamaChat = () => {
   /*
     const handleSendMessage = async () => {
         try {
-          const response = await fetch("/api/ollamaChat", {
+          const response = await fetch("http://localhost:5000/api/ollamaChat", {
             method: "POST",
             headers: {
               "Content-Type": "application/json", // Optional for POST with no body
@@ -257,7 +257,7 @@ const OllamaChat = () => {
     console.log("Sending message to server...");
     console.log(updatedMessageLog);
 
-    const response = await fetch(`/api/testOllamaChat`, {
+    const response = await fetch(`http://localhost:5000/api/testOllamaChat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
