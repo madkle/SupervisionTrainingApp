@@ -26,7 +26,7 @@ export const useChatLogic = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const audioCache = useState(new Map())[0];
   const AIVoice = "alloy";
-  const llmModel = "llama3.1";
+  const llmModel = ["llama3.1", "llama3.2"];
   const [savedMessage, setSavedMessage] = useState("");
   const handleSendMessage = async () => {
     setIsLoading(true);
@@ -38,7 +38,7 @@ export const useChatLogic = (props) => {
     ];
     setMessageLog(updatedMessageLog);
 
-    const serverResponse = await callChatAPI(updatedMessageLog, llmModel);
+    const serverResponse = await callChatAPI(updatedMessageLog, llmModel[0]);
     await handleServerMessage(serverResponse);
   };
 

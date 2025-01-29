@@ -1,0 +1,38 @@
+.report-box {
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+#transcript-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /*border: black 1px solid;*/
+}
+.chatLine {
+  /*border: black 1px solid;*/
+  color: azure;
+  display: flex;
+  gap: 8px;
+  border-bottom: #838383 1px dotted;
+}
+.user {
+}
+.assistant {
+  justify-content: right;
+}
+.chatBubble {
+  display: flex;
+  gap: 6px;
+  background-color: blue;
+  width: fit-content;
+  padding: 4px 14px;
+  border-radius: 8px 8px 0 8px;
+  max-width: 80%;
+  padding: 14px 8px;
+  /*
+    bottom left: border-radius: 8px 8px 8px 0;
+    bottom right: border-radius: 8px 8px 0 8px;
+  */
+}

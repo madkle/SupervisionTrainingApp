@@ -11,7 +11,7 @@ const Llm = () => {
     setOllamaResponse(""); // Clear previous response
   
     try {
-      const response = await fetch("http://localhost:5000/api/ollama", {
+      const response = await fetch("http://localhost:5000/api/ollamaGenerate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const Llm = () => {
   const callOllama = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/ollama", {
+      const response = await fetch("http://localhost:5000/api/ollamaGenerate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Optional for POST with no body

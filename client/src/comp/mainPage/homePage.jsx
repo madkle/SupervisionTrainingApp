@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./homePage.css";
 import SupervisionSimulation from "../SupervisionSim/supervisionSim";
-
+import ReportPage from "../reportPage/reportPage";
 const NorwegianWarning = () => {
   return (
     <div
@@ -114,14 +114,14 @@ const HomePage = () => {
   return (
     <div id="homeContainer">
       <h1>Welcome to the simulation!</h1>
+      <ReportPage/>
+      {/*
       {!isSimulationRunning && <LanguageSelector />}
       <br />
       {!isSimulationRunning && hasSavedChat && <LoadSavedChat />}
       <br />
       {!isSimulationRunning && <ChatTypeSelector />}
-      {/* Space for character selector sometime */}
-
-      {/* Space for character selector sometime */}
+      
       <br />
       <button onClick={changeState}>{!toggle ? "Start" : "Stop"}</button>
       <br />
@@ -132,6 +132,7 @@ const HomePage = () => {
           chatType={chatType}
         />
       )}
+        */}
     </div>
   );
 };
