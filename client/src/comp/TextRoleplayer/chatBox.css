@@ -87,3 +87,11 @@ button.play-message {
 .saveBox >p {
     margin: 0;
 }
+
+.endBox{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    height: fit-content;
+    align-items: center;
+}

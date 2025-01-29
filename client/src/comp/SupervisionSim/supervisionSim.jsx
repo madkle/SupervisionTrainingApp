@@ -7,7 +7,7 @@ const SupervisionSimulation = (props) => {
   return (
     <section id="mainWindow">
       {props.chatType === "text" ? (
-        <TextChat language={props.language} useNewChat={props.useSavedChat} />
+       <TextChat language={props.language} useNewChat={props.useSavedChat}/>
       ) : (
         <AudioRoleplayer language={props.language} />
       )}

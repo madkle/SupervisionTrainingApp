@@ -13,7 +13,6 @@ const TestReport = () => {
           </div>
         );
       })}
-      <Evaluation response={rep[0].response} />
     </div>
   );
 };

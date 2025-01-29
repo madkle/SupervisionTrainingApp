@@ -44,91 +44,51 @@ app.post("/api/ollamaChat", async (req, res) => {
 });
 
 app.post("/api/ollamaGenerate", async (req, res) => {
-  const transcriptArray = [
-    { role: "user", content: "Hei, hvordan går det med deg?" },
-    {
-      role: "assistant",
-      content:
-        "Hei! Det går okay, jeg trodde bare at jeg hadde godt nok avgang fra lærlingerperiode så langt. Men nå har du sagt at jeg ligger bak etter noen måneder, og jeg tenker også over hvorfor jeg ofte kommer for sent eller ikke er på jobb når jeg skal være der. Jeg er en type som helst gjerne åpne opp om jeg kan, men jeg tror nesten bare det nå, siden du har sagt dette.\n\nJeg har hatt litt god tid i jobben, jeg elsker å jobbe her og med kollegene. Men jeg har også vært veldig streng mot meg selv når det gjelder tidligere for sent innkallinger eller enkelte avtale som er blitt utsett igjen...",
-    },
-    {
-      role: "user",
-      content:
-        "Så bra du liker å jobbe her. På hvilken måte har du tatt deg god tid i jobben?",
-    },
-    {
-      role: "assistant",
-      content:
-        "Jeg liker virksomheten, og jeg tror det er en bra sted å lære og utvikle meg selv som arbeidspersonale. Jeg har fått tilbud om forskjellige oppdrag som jeg har vært glad for å være med på. Jeg har også hatt god kontakt med noen av kollegene, vi snakker mye om det enkelte og hjelper hverandre godt når vi trenger det.\n\nMen også noen ting som er litt usikre eller ukjente for meg etter 3 måneder på jobb...",
-    },
-    {
-      role: "user",
-      content: "Jeg skjønner, Hva slags ting er du usikker på?",
-    },
-    {
-      role: "assistant",
-      content:
-        "Det ene jeg er usikker på er egentlig hvordan jeg skal få alt under kontroll når det gjelder tid og oppgaver. Jeg har vært litt dårlig til å sette prioriteringer og planlegge meg selv, så noen ganger har jeg kommet for sent eller glemt en del av oppdragene hjemme.\n\nJeg tror også at jeg noen ganger slipper opp på jobben ved å løse små oppgaver i stedet for det store bildet. Jeg vet at jeg må bli bedre til å se hvordan alle de forskjellige deloppgavene skal være sammen og hvordan de skal gå fremover.\n\nSvært god ting er imidlertid at du kommer overfor meg om hva som er en utfordring, det er et stort pluspunkt ved denne læreperioden.",
-    },
-  ];
+  const body = req.body;
+  const chatlog = body.chatLog;
+  const generateTranscript = (array) => {
+    let transcript = "";
+    array.map((item, index) => {
+      const content = item.content.replace(/\n\n/g, "");
+
+      if (item.role !== "system") {
+        transcript += `${
+          item.role === "user" ? "Veileder" : "Lærling"
+        }: ${content} \n\n`;
+      }
+    });
+    return transcript;
+  };
   try {
     console.log("Starting Ollama generation...");
     const characteristics =
-    "Du er en lærer i faget Veiledning av lærlinger. Du lærer andre veiledningsmetoder og teknikker. Din student har nå gjennomført en veiledningssamtale med en lærling"
-     // "You are a supervision teacher, teaching others about supervision methods. Your student has now had a supervision conversation with their trainee.";
+      "Du er en lærer i faget Veiledning av lærlinger. Du lærer andre veiledningsmetoder og teknikker. Din student har nå gjennomført en veiledningssamtale med en lærling";
+    // "You are a supervision teacher, teaching others about supervision methods. Your student has now had a supervision conversation with their trainee.";
     const instruction =
-    "Se på samtalen mellom veilederen (studenten din) og deres lærling. Evaluer hvilke veiledningsmetoder og teknikker de har brukt."  
+      "Se på samtalen mellom veilederen (studenten din) og deres lærling. Evaluer hvilke veiledningsmetoder og teknikker de har brukt.";
     //"Take a look at this interaction between a supervisor and their trainee. Evaluate which supervision methods and technique did the supervisor use?";
-    const transcript = `
-  Veileder: Hei, hvordan går det med deg?
-  Lærling: Hei! Det går okay, jeg trodde bare at jeg hadde godt nok avgang fra lærlingerperiode så langt. Men nå har du sagt at jeg ligger bak etter noen måneder, og jeg tenker også over hvorfor jeg ofte kommer for sent eller ikke er på jobb når jeg skal være der. Jeg er en type som helst gjerne åpne opp om jeg kan, men jeg tror nesten bare det nå, siden du har sagt dette.\n\nJeg har hatt litt god tid i jobben, jeg elsker å jobbe her og med kollegene. Men jeg har også vært veldig streng mot meg selv når det gjelder tidligere for sent innkallinger eller enkelte avtale som er blitt utsett igjen...
-  Veileder:Så bra du liker å jobbe her. På hvilken måte har du tatt deg god tid i jobben?
-  Lærling:Jeg liker virksomheten, og jeg tror det er en bra sted å lære og utvikle meg selv som arbeidspersonale. Jeg har fått tilbud om forskjellige oppdrag som jeg har vært glad for å være med på. Jeg har også hatt god kontakt med noen av kollegene, vi snakker mye om det enkelte og hjelper hverandre godt når vi trenger det.\n\nMen også noen ting som er litt usikre eller ukjente for meg etter 3 måneder på jobb...
-  Veileder:Jeg skjønner, Hva slags ting er du usikker på?
-  Lærling:Det ene jeg er usikker på er egentlig hvordan jeg skal få alt under kontroll når det gjelder tid og oppgaver. Jeg har vært litt dårlig til å sette prioriteringer og planlegge meg selv, så noen ganger har jeg kommet for sent eller glemt en del av oppdragene hjemme.\n\nJeg tror også at jeg noen ganger slipper opp på jobben ved å løse små oppgaver i stedet for det store bildet. Jeg vet at jeg må bli bedre til å se hvordan alle de forskjellige deloppgavene skal være sammen og hvordan de skal gå fremover.\n\nSvært god ting er imidlertid at du kommer overfor meg om hva som er en utfordring, det er et stort pluspunkt ved denne læreperioden.
-`;
+    const transcript = generateTranscript(chatlog);
     const parameters = "Skriv på norsk.";
     const format = `Respond in JSON. Use this as a template: 
 {
-  "title": "tester tester 123",
-  "introduction": "dra til helvete",
+  "title": "",
+  "introduction": "",
   "techniques": [
-    { "name": "Empati", "description": "Morra di er feit" },
-    { "name": "Refleksjon", "description": "Jeg elsker bananer" }
+    { "name": "", "description": "" },
+    { "name": "", "description": "" }
   ],
   "limitations": [
-    "Veilederen er dum i hodet",
-    "Manglet ryggerad og hjerneseller"
+    "",
+    ""
   ],
-  "summary": "Denne samtalen var ubrukelig"
-}`
-/*
-const llamaFormat = {
-  "type": "object",
-  "properties": {
-    "title":{"type":"string"},
-    "introduction":{"type":"string"},
-    "techniques":{"type":"array","properties": {[
-      "name": {type}
-    ]}},
-    "limitations":{"type":"array"},
-    "summary":{"type":"string"},
-  },
-  "required":[
-    "title",
-    "introduction",
-    "techniques",
-    "limitations",
-    "summary"
-  ]
-} 
-  */
+  "summary": ""
+}`;
     let prompt = `${characteristics} ${instruction} ${parameters} ${format} The conversation:${transcript}`;
     const output = await ollama.generate({
       model: "llama3.1",
       prompt,
       stream: false,
-      format:"json",
+      format: "json",
     });
 
     res.status(200).send({ content: output });

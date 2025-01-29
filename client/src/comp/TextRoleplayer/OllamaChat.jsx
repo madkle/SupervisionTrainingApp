@@ -20,13 +20,11 @@ const TextChat = (props) => {
   return (
     <div className="ollama-chat">
       <h1>Ollama Chat</h1>
-      
+
       <div className="chat-container">
         {messageLog
           .filter((msg) => msg.role !== "system")
           .map((msg, index) => (
-            
-            
             <div key={index} className={`message ${msg.role}`}>
               <strong>
                 {msg.role === "assistant" ? msg.character?.name : msg.role}:
@@ -67,8 +65,10 @@ const TextChat = (props) => {
           </div>
         ))}
       </div>
-      <div className="saveBox"><button onClick={saveChat}>Save</button><p>{savedMessage}</p></div>
-      
+      <div className="saveBox">
+        <button onClick={saveChat}>Lagre</button>
+        <p>{savedMessage}</p>
+      </div>
     </div>
   );
 };

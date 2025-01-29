@@ -81,7 +81,6 @@ export const useChatLogic = (props) => {
     localStorage.setItem("audioLog", JSON.stringify(audioLog));
     setSavedMessage("Chat saved!");
   };
-
   return {
     savedMessage,
     messageLog,
@@ -94,5 +93,6 @@ export const useChatLogic = (props) => {
     handleKeyDown,
     handlePlayAudio,
     saveChat,
+    
   };
 };

@@ -22,11 +22,11 @@ const NorwegianWarning = () => {
 const HomePage = () => {
   const availableLanguages = ["norwegian", "english"];
   const [language, setLanguage] = useState(availableLanguages[0]);
-  const [toggle, setButton] = useState(false);
   const [chatType, setChatType] = useState("text");
-  const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const [isRunning, setisRunning] = useState(false);
+  const [isLoadingReport, setisLoadingReport] = useState(false);
   const [useSavedChat, setUseSavedChat] = useState(false);
-
+  
   const LanguageSelector = () => {
     return (
       <>
@@ -104,35 +104,35 @@ const HomePage = () => {
     setUseSavedChat(!useSavedChat);
   };
 
-  const changeState = () => {
-    setButton(!toggle);
-    setIsSimulationRunning(!toggle);
+  const changeRunningState = () => {
+    setisRunning(!isRunning);
   };
-
   const hasSavedChat = localStorage.getItem("chatLog") !== null;
   
   return (
     <div id="homeContainer">
-      <h1>Welcome to the simulation!</h1>
-      <ReportPage/>
-      {/*
-      {!isSimulationRunning && <LanguageSelector />}
+      <h1>Welcome to the simulation!</h1>{/*
+      <ReportPage chatLog={chatlog}/>
+      */}
+      {!isRunning && <LanguageSelector />}
       <br />
-      {!isSimulationRunning && hasSavedChat && <LoadSavedChat />}
+      {!isRunning && hasSavedChat && <LoadSavedChat />}
       <br />
-      {!isSimulationRunning && <ChatTypeSelector />}
+      {!isRunning && <ChatTypeSelector />}
       
       <br />
-      <button onClick={changeState}>{!toggle ? "Start" : "Stop"}</button>
+      <button onClick={changeRunningState}>{!isRunning ? "Start" : "Stop"}</button>
       <br />
-      {toggle && (
+      {isRunning && !isLoadingReport && (
         <SupervisionSimulation
           language={language}
           useSavedChat={useSavedChat}
           chatType={chatType}
         />
       )}
-        */}
+      <br/>
+      {!isRunning && hasSavedChat?<ReportPage hasSavedChat={hasSavedChat}/>:<></>}
+      
     </div>
   );
 };

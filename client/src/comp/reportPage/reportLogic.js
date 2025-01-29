@@ -3,13 +3,14 @@ import { useState } from "react";
 import { handleAudioResponse } from "../functionality/audioHanlder.js";
 import { generateSpeech } from "../functionality/textToSpeech.js";
 export const useReportLogic = (props) => {
-  const callOllamaFeedback = async () => {
+  const callOllamaFeedback = async (log) => {
     const response = await fetch(`http://localhost:5000/api/ollamaGenerate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body: JSON.stringify({ chatLog: exampleChatLog }),
     });
 
     if (!response.ok) {
@@ -23,28 +24,32 @@ export const useReportLogic = (props) => {
   return { callOllamaFeedback };
 };
 export const exampleEvaluation = {
-  "title": "Evaluering av supervisionssamtale",
-  "introduction": "Velkommen til evaluering av denne supervisionssamtalen!",
-  "techniques": [
-      {
-          "name": "Empati",
-          "description": "Supervisor ser på traineens perspektiv og uttrykker forståelse, for eksempel da supervisor sier 'Jeg skjønner'."
-      },
-      {
-          "name": "Aktiv lytting",
-          "description": "Supervisor oppmuntrer traineens åpenhet om sine tanker og følelser, for eksempel da supervisor spør 'Hva slags ting er du usikker på?'."
-      },
-      {
-          "name": "Fokus på utvikling",
-          "description": "Supervisor fokuserer på traineens egen utvikling og hvordan hun kan arbeide med å løse utfordringene sine, for eksempel da supervisor spør 'På hvilken måte har du tatt deg god tid i jobben?'"
-      }
+  title: "Evaluering av supervisionssamtale",
+  introduction: "Velkommen til evaluering av denne supervisionssamtalen!",
+  techniques: [
+    {
+      name: "Empati",
+      description:
+        "Supervisor ser på traineens perspektiv og uttrykker forståelse, for eksempel da supervisor sier 'Jeg skjønner'.",
+    },
+    {
+      name: "Aktiv lytting",
+      description:
+        "Supervisor oppmuntrer traineens åpenhet om sine tanker og følelser, for eksempel da supervisor spør 'Hva slags ting er du usikker på?'.",
+    },
+    {
+      name: "Fokus på utvikling",
+      description:
+        "Supervisor fokuserer på traineens egen utvikling og hvordan hun kan arbeide med å løse utfordringene sine, for eksempel da supervisor spør 'På hvilken måte har du tatt deg god tid i jobben?'",
+    },
   ],
-  "limitations": [
-      "Supervisor kunne ha fokusert mer på traineens egne forslag og ideer om hvordan hun kan arbeide med å løse utfordringene sine.",
-      "Supervisoren kunne ha vært enda mer aktiv i å hjelpe traineens til å utvikle konkrete planer for hvordan hun skal tackle utfordringene sine."
+  limitations: [
+    "Supervisor kunne ha fokusert mer på traineens egne forslag og ideer om hvordan hun kan arbeide med å løse utfordringene sine.",
+    "Supervisoren kunne ha vært enda mer aktiv i å hjelpe traineens til å utvikle konkrete planer for hvordan hun skal tackle utfordringene sine.",
   ],
-  "summary": "Denne samtalen viser god bruk av empati, aktiv lytting og fokus på utvikling. Supervisor har en positiv og støttende atferd, men kunne hatt mer tydelig focus på traineens egen rolle i å løse utfordringene sine."
-}
+  summary:
+    "Denne samtalen viser god bruk av empati, aktiv lytting og fokus på utvikling. Supervisor har en positiv og støttende atferd, men kunne hatt mer tydelig focus på traineens egen rolle i å løse utfordringene sine.",
+};
 export const exampleChatLog = [
   {
     role: "system",
