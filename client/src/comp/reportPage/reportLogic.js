@@ -1,7 +1,3 @@
-import { useState } from "react";
-
-import { handleAudioResponse } from "../functionality/audioHanlder.js";
-import { generateSpeech } from "../functionality/textToSpeech.js";
 export const useReportLogic = (props) => {
   const callOllamaFeedback = async (log) => {
     const response = await fetch(`http://localhost:5000/api/ollamaGenerate`, {
@@ -10,7 +6,7 @@ export const useReportLogic = (props) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ chatLog: exampleChatLog }),
+      body: JSON.stringify({ chatLog: log }),
     });
 
     if (!response.ok) {
@@ -23,33 +19,8 @@ export const useReportLogic = (props) => {
 
   return { callOllamaFeedback };
 };
-export const exampleEvaluation = {
-  title: "Evaluering av supervisionssamtale",
-  introduction: "Velkommen til evaluering av denne supervisionssamtalen!",
-  techniques: [
-    {
-      name: "Empati",
-      description:
-        "Supervisor ser på traineens perspektiv og uttrykker forståelse, for eksempel da supervisor sier 'Jeg skjønner'.",
-    },
-    {
-      name: "Aktiv lytting",
-      description:
-        "Supervisor oppmuntrer traineens åpenhet om sine tanker og følelser, for eksempel da supervisor spør 'Hva slags ting er du usikker på?'.",
-    },
-    {
-      name: "Fokus på utvikling",
-      description:
-        "Supervisor fokuserer på traineens egen utvikling og hvordan hun kan arbeide med å løse utfordringene sine, for eksempel da supervisor spør 'På hvilken måte har du tatt deg god tid i jobben?'",
-    },
-  ],
-  limitations: [
-    "Supervisor kunne ha fokusert mer på traineens egne forslag og ideer om hvordan hun kan arbeide med å løse utfordringene sine.",
-    "Supervisoren kunne ha vært enda mer aktiv i å hjelpe traineens til å utvikle konkrete planer for hvordan hun skal tackle utfordringene sine.",
-  ],
-  summary:
-    "Denne samtalen viser god bruk av empati, aktiv lytting og fokus på utvikling. Supervisor har en positiv og støttende atferd, men kunne hatt mer tydelig focus på traineens egen rolle i å løse utfordringene sine.",
-};
+export const exampleEvaluation =
+  '{\n  "title": "Veiledningssamtale med lærling",\n  "introduction": "I denne rapporten har veilederen og lærlingen gått gjennom en samtale for å identifisere utfordringer og arbeide fremover.",\n  "techniques": [\n    {\n      "name": "Aktiv listening",\n      "description": "Veilederen lytter aktivt til lærlingens uttrykkelser og reflekterer hva de tror lærlingen mener."\n    },\n    {\n      "name": "Empatisk forståelse",\n      "description": "Veilederen forsøker å forstå lærlingens perspektiv og følelser, spesielt når det gjelder åpningen om å være usikker på hvordan å ta hånd om tid og oppgaver."\n    },\n    {\n      "name": "Åpen spørsmålsteknikk",\n      "description": "Veilederen bruker åpne spørsmål for å stimulere lærlingens refleksjon over utfordringene de møter, for eksempel \'Hvordan har du tatt deg god tid i jobben?\'"\n    },\n    {\n      "name": "Refleksjon og erkjennelse av egne styrker og svakheter",\n      "description": "Lærlingen reflekterer over sine egne styrker og svakheter, for eksempel at de har vært god til å jobbe på enkelte oppdrag men også dårlig til å sette prioriteringer og planlegge seg selv."\n    }\n  ],\n  "limitations": [\n    "Tiden til samtalen var nok, og det kunne ha vært bra med flere detaljer om hvordan lærlingen ønsker å arbeide fremover.",\n    "Veilederen hadde ikke noe skisse eller liste over mål for hva som skulle dekkas i samtalen."\n  ],\n  "summary": "Samtalen inneholdt gode eksempler på aktive veiledningsmetoder og teknikker, inkludert aktiv lytting, empatisk forståelse, åpen spørsmålsteknikk og refleksjon over egne styrker og svakheter. En tilbakemelding ville være en god idé, da det ikke var noe skisse eller liste over mål på hva som skulle dekkas i samtalen."\n}';
 export const exampleChatLog = [
   {
     role: "system",

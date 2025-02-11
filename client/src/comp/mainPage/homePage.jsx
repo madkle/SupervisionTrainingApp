@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./homePage.css";
 import SupervisionSimulation from "../SupervisionSim/supervisionSim";
 import ReportPage from "../reportPage/reportPage";
+import { LogContext } from "../context/context.js";
+import standardAvatar from "./files/avatar.png";
 const NorwegianWarning = () => {
   return (
     <div
@@ -18,15 +20,13 @@ const NorwegianWarning = () => {
     </div>
   );
 };
-
-const HomePage = () => {
+const OldPage = () => {
   const availableLanguages = ["norwegian", "english"];
   const [language, setLanguage] = useState(availableLanguages[0]);
   const [chatType, setChatType] = useState("text");
   const [isRunning, setisRunning] = useState(false);
-  const [isLoadingReport, setisLoadingReport] = useState(false);
   const [useSavedChat, setUseSavedChat] = useState(false);
-  
+
   const LanguageSelector = () => {
     return (
       <>
@@ -108,31 +108,72 @@ const HomePage = () => {
     setisRunning(!isRunning);
   };
   const hasSavedChat = localStorage.getItem("chatLog") !== null;
-  
+
   return (
     <div id="homeContainer">
-      <h1>Welcome to the simulation!</h1>{/*
-      <ReportPage chatLog={chatlog}/>
-      */}
+      <h1>Welcome to the simulation!</h1>
       {!isRunning && <LanguageSelector />}
       <br />
       {!isRunning && hasSavedChat && <LoadSavedChat />}
       <br />
       {!isRunning && <ChatTypeSelector />}
-      
+
       <br />
-      <button onClick={changeRunningState}>{!isRunning ? "Start" : "Stop"}</button>
+      <button onClick={changeRunningState}>
+        {!isRunning ? "Start" : "Stop"}
+      </button>
       <br />
-      {isRunning && !isLoadingReport && (
+      {isRunning && (
         <SupervisionSimulation
           language={language}
           useSavedChat={useSavedChat}
           chatType={chatType}
         />
       )}
-      <br/>
-      {!isRunning && hasSavedChat?<ReportPage hasSavedChat={hasSavedChat}/>:<></>}
+      <br />
+      {!isRunning && hasSavedChat ? (
+        <ReportPage hasSavedChat={hasSavedChat} testing={false} />
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+};
+const ScenarioCard = ({ avatar, name, personality, description }) => {
+  return (
+    <>
+      <div className="scenarioCard visualize">
+        <img src={avatar} className="avatarImage" alt="avatar image"></img>
+        <div className=" avatarTextContainer">
+          <div className="avatarTextRow ">
+            <h2 className="">Navn: </h2>
+            <p className="">{name || "No Data"}</p>
+          </div>
+          <div className="avatarTextRow">
+            <h2>Personlighet</h2> <p>{personality || "No Data"}</p>
+          </div>
+          <div className="avatarTextRow">
+            <h2>Beskrivelse</h2> <p>{description || "No Data"}</p>
+          </div>
+          <button>Velg Senario</button>
+        </div>
+      </div>
+    </>
+  );
+};
+const HomePage = () => {
+  return (
+    <div id="homeContainer">
+      <h1>Velkommen</h1>
+      <div id="scenarioContainer">
+      <ScenarioCard avatar={standardAvatar} name={"Ola"} />
       
+      <ScenarioCard avatar={standardAvatar} name={"Ola"} />
+      <ScenarioCard avatar={standardAvatar} name={"Ola"} />
+
+      </div>
+      <br />
+      {/*<OldPage />*/}
     </div>
   );
 };

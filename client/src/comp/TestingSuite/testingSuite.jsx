@@ -5,6 +5,7 @@ import AudioRecorder from "./testingComps/recording.jsx";
 import Llm from "./testingComps/ollama.jsx";
 import StreamTest from "./testingComps/streamtest.jsx";
 import OllamaChat from "./testingComps/ollamaChat.jsx";
+import ReportPage from "../reportPage/reportPage.jsx";
 const TestingSuite = () => {
 
   return (
@@ -14,6 +15,8 @@ const TestingSuite = () => {
       <Tts />
       <Transcription />
       <AudioRecorder />
+      <br/>
+      <ReportPage testing={true} hasSavedChat={false}/>
     </div>
   );
 };

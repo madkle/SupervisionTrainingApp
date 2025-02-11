@@ -9,24 +9,30 @@ import Transcription from "./transcription.jsx";
 
 import TestReport from "./test.jsx";
 import "./reportPageStyle.css";
+
 const ReportPage = (props) => {
-    const chatLogString = props.hasSavedChat ? localStorage.getItem("chatLog"): {};
-    const chatLog = JSON.parse(chatLogString)
-    const locallyStoredFeedback = localStorage.getItem("feedback");
-  const savedFeedback = locallyStoredFeedback !== null ?  locallyStoredFeedback : ""
+  const chatLogString = props.hasSavedChat
+    ? localStorage.getItem("chatLog")
+    : {};
+  const isTesting = props.testing;
+  const chatLog = !isTesting ? JSON.parse(chatLogString) : exampleChatLog;
+  const locallyStoredFeedback = localStorage.getItem("feedback");
+  let savedFeedback =
+    locallyStoredFeedback !== null ? locallyStoredFeedback : "";
+  if (isTesting) {
+    savedFeedback = exampleEvaluation
+  }
   const [feedbackModule, setFeedbackModule] = useState(
     <Evaluation response={savedFeedback} />
   );
   const { callOllamaFeedback } = useReportLogic(props);
   const getFeedback = async () => {
-    
-    const feedbackPromise = await callOllamaFeedback();
+    const feedbackPromise = await callOllamaFeedback(chatLog);
     const response = feedbackPromise.response;
     setFeedbackModule(<Evaluation response={response} />);
-    localStorage.setItem("feedback", response)
-    console.log(feedbackPromise);
+    localStorage.setItem("feedback", response);
   };
-  
+
   return (
     <div className="report-box">
       <h1>Report</h1>
