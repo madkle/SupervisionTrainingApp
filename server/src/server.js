@@ -126,6 +126,7 @@ app.post("/api/save-audio", upload.single("file"), (req, res) => {
   }
 });
 
+//endpoint for transcription
 app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
   try {
     // Access the uploaded file and form data
@@ -161,7 +162,7 @@ app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
   }
 });
 
-// Route for transcription
+// Route for local transcription
 app.post("/api/transcribeLocalAudio", async (req, res) => {
   try {
     const audioFilePath = path.join(DOWNLOADS_DIR, "recorded-audio.webm");

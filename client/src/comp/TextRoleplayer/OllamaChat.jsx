@@ -7,14 +7,12 @@ const TextChat = (props) => {
     savedMessage,
     messageLog,
     inputMessage,
-    audioLog,
+    //audioLog,
     isLoading,
     setInputMessage,
     handleSendMessage,
     handleKeyDown,
     handlePlayAudio,
-    saveChat,
-    setSavedMessage,
   } = useChatLogic(props);
 
   return (
@@ -22,7 +20,7 @@ const TextChat = (props) => {
       <h1>Ollama Chat</h1>
 
       <div className="chat-container">
-        {messageLog
+        {messageLog !== null && messageLog
           .filter((msg) => msg.role !== "system")
           .map((msg, index) => (
             <div key={index} className={`message ${msg.role}`}>
@@ -54,7 +52,7 @@ const TextChat = (props) => {
           Send
         </button>
       </div>
-
+          {/*
       <div className="audio-log">
         {audioLog.map((entry, index) => (
           <div key={index} className="audio-entry">
@@ -65,10 +63,7 @@ const TextChat = (props) => {
           </div>
         ))}
       </div>
-      <div className="saveBox">
-        <button onClick={saveChat}>Lagre</button>
-        <p>{savedMessage}</p>
-      </div>
+      */}
     </div>
   );
 };

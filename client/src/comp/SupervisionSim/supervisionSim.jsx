@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./supervisionSim.css";
+import { Context } from "../../App.jsx";
 import TextChat from "../TextRoleplayer/OllamaChat.jsx";
 import AudioRoleplayer from "../AudioRoleplayer/audioRoleplay";
 
-const SupervisionSimulation = (props) => {
+const SupervisionSimulation = () => {
+  const InfoObject = useContext(Context);
+  const [language] = InfoObject.language;
+  const [isSimRunning, setSimRunning] = InfoObject.simRunning;
+
   return (
-    <section id="mainWindow">
-      {props.chatType === "text" ? (
-       <TextChat language={props.language} useNewChat={props.useSavedChat}/>
-      ) : (
-        <AudioRoleplayer language={props.language} />
-      )}
-    </section>
+    <div>
+      <section>{isSimRunning && <TextChat language={language} />}</section>
+      <section>
+        {isSimRunning && <AudioRoleplayer language={language} />}
+      </section>
+    </div>
   );
 };
 export default SupervisionSimulation;

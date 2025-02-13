@@ -19,8 +19,6 @@ const AudioRecorder = (props) => {
     isWaitingForServer,
   } = useAudioChatLogic(props);
 
-  
-
   return (
     <div className="audio-recorder">
       <h2>Available Recordings:</h2>
