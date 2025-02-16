@@ -33,7 +33,7 @@ const TextChat = (props) => {
                   Play Message
                 </button>
               )}
-            </div>
+            </div> 
           ))}
       </div>
 

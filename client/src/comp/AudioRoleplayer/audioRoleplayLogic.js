@@ -1,16 +1,14 @@
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { handleSpeechToText } from "../functionality/speechToText.js";
 import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
 import { handleAudioResponse } from "../functionality/audioHanlder.js";
 
+import { Context } from "../../App.jsx";
 export const useAudioChatLogic = (props) => {
-    const selectedExampleData =
-    props.language === "norwegian"
-      ? exampleData.norwegian
-      : exampleData.english;
+  const InfoObject = useContext(Context);
+  const [messageLog, setMessageLog] = InfoObject.chatlog;
 
-  const [messageLog, setMessageLog] = useState(selectedExampleData);
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
   const mediaStream = useRef(null);
   const mediaRecorder = useRef(null);

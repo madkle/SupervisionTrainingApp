@@ -10,12 +10,12 @@ const SupervisionSimulation = () => {
   const [isSimRunning, setSimRunning] = InfoObject.simRunning;
 
   return (
-    <div>
+    <>
+      {/*
       <section>{isSimRunning && <TextChat language={language} />}</section>
-      <section>
-        {isSimRunning && <AudioRoleplayer language={language} />}
-      </section>
-    </div>
+      */}
+      {isSimRunning && <AudioRoleplayer language={language} />}
+    </>
   );
 };
 export default SupervisionSimulation;

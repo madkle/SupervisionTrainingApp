@@ -89,7 +89,7 @@ function App() {
   const [messageLog, setMessageLog] = useState(initialMessageLog);
   const [useAudio, setUseAudio] = useState(false);
   //const [audioLog, setAudioLog] = useState(initialAudioLog);
-  const [isSimRunning, setSimRunning] = useState(false);
+  const [isSimRunning, setSimRunning] = useState(true);
   const [feedback, setFeedback] = useState("");
   const InfoObject = {
     language: [language, setLanguage],

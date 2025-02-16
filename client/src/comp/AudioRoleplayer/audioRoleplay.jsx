@@ -2,10 +2,11 @@ import React, { useRef, useState } from "react";
 import { handleSpeechToText } from "../functionality/speechToText.js";
 import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
 import { handleAudioResponse } from "../functionality/audioHanlder.js";
-
+import standardAvatar from "./files/avatar.png";
 import "./audioRoleplay.css";
 import { useAudioChatLogic } from "./audioRoleplayLogic.js";
-const AudioRecorder = (props) => {
+import micIcon from "./files/micIcon.svg";
+const OldAudioRecorder = (props) => {
   const {
     setUseAutoStop,
     setSilenceDuration,
@@ -101,4 +102,52 @@ const AudioRecorder = (props) => {
   );
 };
 
+const AudioRecorder = (props) => {
+  const {
+    setUseAutoStop,
+    setSilenceDuration,
+    startRecording,
+    stopRecording,
+    audioLog,
+    recordedAudios,
+    silenceDuration,
+    useAutoStop,
+    isRecording,
+    isWaitingForServer,
+  } = useAudioChatLogic(props);
+  const [isLoading, setIsLoading] = useState(false)
+  return (
+    <section id="audioContainer">
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        
+        
+      </div>
+      <div className="AudioGrid">
+        <div id="micBtn" onClick={() => {
+          setIsLoading(!isLoading)
+        }}>
+          {isLoading? <div class="loader"></div> : <img src={micIcon}></img>}
+          
+        </div>
+        <div id="avatarContainer">
+          <img src={standardAvatar}></img>
+        </div>
+        <div id="replyContainer" hidden={false}>
+          <h1>Lærling:</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolo
+        </p>
+        </div>
+        <div id="endBtn">
+          <button>Avslutt</button>
+        </div>
+
+      </div>
+    </section>
+  );
+};
 export default AudioRecorder;
