@@ -11,7 +11,7 @@ export const useAudioChatLogic = (props) => {
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
   const [isRecording, setIsRecording] = useState(false);
   const [isWaitingForServer, setIsWaitingForServer] = useState(false);
-  const [mostRecentReply, setMostRecentReply] = useState("")
+  const [mostRecentReply, setMostRecentReply] = useState("");
   //audio recorders
   const mediaStream = useRef(null);
   const audioContext = useRef(null);
@@ -75,32 +75,24 @@ export const useAudioChatLogic = (props) => {
   };
   const handleChat = async () => {
     if (transcription !== "") {
-      const message = transcription;
-      const model = "llama3.1";
-      console.log("transcription: " + transcription);
-      
-      console.log("message log before handle server message:");
-      console.log(messageLog);
-      handleServerMessage(message, model);
+      try {
+        const message = transcription;
+        const model = "llama3.1";
+        //adding user message to the log
+        const updatedLog = [...messageLog, { role: "user", content: message }];
 
-      transcription = "";
-    }
-  };
+        //calling the chat endpoint to get a response
+        const AIResponse = await callChatAPI(updatedLog, model);
 
-  const handleServerMessage = async (message, model) => {
-    try {
-      const updatedLog = [...messageLog, { role: "user", content: message }];
-      console.log("Message sent to server: ");
-      console.log(updatedLog);
-      const AIResponse = await callChatAPI(updatedLog, model);
-      console.log("response from server");
-      console.log(AIResponse);
-      
-      const ServerMessage = AIResponse.message;
-      console.log("message from server:");
-      console.log(ServerMessage);
-      setMostRecentReply(ServerMessage.content)
-      const updatedLogWithAI = [...updatedLog, ServerMessage]
+        //isolating the message from the response
+        const ServerMessage = AIResponse.message;
+
+        //setting the content of the response to be shown on the app
+        setMostRecentReply(ServerMessage.content);
+
+        //adding the response to the message log to be set to the context
+        const updatedLogWithAI = [...updatedLog, ServerMessage];
+        
       /*
       const audioURL = await handleAudioResponse(
         ServerMessage.content,
@@ -111,16 +103,18 @@ export const useAudioChatLogic = (props) => {
         { url: audioURL, text: ServerMessage.content },
       ]);
       */
-      setIsWaitingForServer(false);
-      console.log("What to send to message log");
-      console.log(updatedLogWithAI);
+        //finished with the response, updating the global log
+        setIsWaitingForServer(false);
+        setMessageLog(updatedLogWithAI);
 
-      setMessageLog(updatedLogWithAI);
-      
-    } catch (error) {
-      console.error("Error handling server message: " + error);
+        //clearing the transcription for later
+        transcription = "";
+      } catch (error) {
+        console.error("Error handling server message: " + error);
+      }
     }
   };
+
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
@@ -165,11 +159,6 @@ export const useAudioChatLogic = (props) => {
 
     detectSilence();
   };
-  console.log("+-+-+-+-+-+-+-+-+-+-+-+-+");
-  console.log("contant update of messagelog");
-  console.log(messageLog);
-  console.log("+-+-+-+-+-+-+-+-+-+-+-+-+");
-  
   const stopSilenceDetection = () => {
     clearTimeout(silenceTimeout.current);
     silenceTimeout.current = null;
@@ -190,6 +179,6 @@ export const useAudioChatLogic = (props) => {
     stopRecording,
     isRecording,
     audioLog,
-    mostRecentReply
+    mostRecentReply,
   };
 };
