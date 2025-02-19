@@ -12,7 +12,7 @@ const Evaluation = ({ response }) => {
 
   return data !== "" ? (
     <div>
-      <h1>{data.title}</h1>
+      <h1>{data.title}</h1> 
       <p>{data.introduction}</p>
 
       <h2>Inkluderte teknikker:</h2>
