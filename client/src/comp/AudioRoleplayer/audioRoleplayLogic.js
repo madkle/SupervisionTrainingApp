@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useContext } from "react";
 import { handleSpeechToText } from "../functionality/speechToText.js";
 import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
@@ -8,22 +7,31 @@ import { Context } from "../../App.jsx";
 export const useAudioChatLogic = (props) => {
   const InfoObject = useContext(Context);
   const [messageLog, setMessageLog] = InfoObject.chatlog;
-
+  const [chosenScenario] = InfoObject.scenario;
   const [recordedAudios, setRecordedAudios] = useState([]); // Array to store audio URLs
+  const [isRecording, setIsRecording] = useState(false);
+  const [isWaitingForServer, setIsWaitingForServer] = useState(false);
+  const [mostRecentReply, setMostRecentReply] = useState("")
+  //audio recorders
   const mediaStream = useRef(null);
-  const mediaRecorder = useRef(null);
-  const chunks = useRef([]);
   const audioContext = useRef(null);
   const analyser = useRef(null);
-  const silenceTimeout = useRef(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [useAutoStop, setUseAutoStop] = useState(false);
-  const [isWaitingForServer, setIsWaitingForServer] = useState(false);
-  const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
+  const mediaRecorder = useRef(null);
+  const chunks = useRef([]);
+
+  //transcription
   let transcription = "";
-  const AIVoice = "alloy";
+
+  //globale vars for autostop
+  const silenceTimeout = useRef(null);
+  const [useAutoStop, setUseAutoStop] = useState(false);
+  const [silenceDuration, setSilenceDuration] = useState(3); // Default to 3 seconds
+
+  const AIVoice = chosenScenario.voice;
+
   //AUDIO
   const [audioLog, setAudioLog] = useState([]);
+
   const startRecording = async () => {
     setIsRecording(true);
     try {
@@ -50,10 +58,10 @@ export const useAudioChatLogic = (props) => {
         const url = URL.createObjectURL(recordedBlob);
         // Pass the Blob to the transcription function
         transcription = await handleSpeechToText(recordedBlob, "whisper-1");
+
         handleChat(); // Pass the updated value
 
         setRecordedAudios((prev) => [...prev, { url, transcription }]); // Add the audio URL to the array
-
         chunks.current = [];
         stopSilenceDetection();
       };
@@ -65,48 +73,54 @@ export const useAudioChatLogic = (props) => {
       console.error("Error accessing microphone:", error);
     }
   };
-
   const handleChat = async () => {
-    console.log(transcription);
-
     if (transcription !== "") {
-      console.log("Transcription:", transcription);
       const message = transcription;
       const model = "llama3.1";
+      console.log("transcription: " + transcription);
+      
+      console.log("message log before handle server message:");
+      console.log(messageLog);
+      handleServerMessage(message, model);
 
-      const updatedMessageLog = [
-        ...messageLog,
-        {
-          role: "user",
-          content: message,
-        },
-      ];
-
-      setMessageLog(updatedMessageLog);
-
-      handleServerMessage(await callChatAPI(updatedMessageLog, model));
       transcription = "";
     }
   };
 
-  const handleServerMessage = async (serverResponse) => {
-    const message = serverResponse.message;
-    console.log("Message returned from server: ", serverResponse);
-
-    const audioURL = await handleAudioResponse(message.content, AIVoice);
-    setAudioLog((prevAudioLog) => [
-      ...prevAudioLog,
-      { url: audioURL, text: message.content },
-    ]);
-
-    setMessageLog((prevMessageLog) => {
-      const updatedMessageLog = [...prevMessageLog, message];
+  const handleServerMessage = async (message, model) => {
+    try {
+      const updatedLog = [...messageLog, { role: "user", content: message }];
+      console.log("Message sent to server: ");
+      console.log(updatedLog);
+      const AIResponse = await callChatAPI(updatedLog, model);
+      console.log("response from server");
+      console.log(AIResponse);
+      
+      const ServerMessage = AIResponse.message;
+      console.log("message from server:");
+      console.log(ServerMessage);
+      setMostRecentReply(ServerMessage.content)
+      const updatedLogWithAI = [...updatedLog, ServerMessage]
+      /*
+      const audioURL = await handleAudioResponse(
+        ServerMessage.content,
+        AIVoice
+      );
+      setAudioLog([
+        ...audioLog,
+        { url: audioURL, text: ServerMessage.content },
+      ]);
+      */
       setIsWaitingForServer(false);
-      //console.log("Message log updated: ", updatedMessageLog);
-      return updatedMessageLog;
-    });
-  };
+      console.log("What to send to message log");
+      console.log(updatedLogWithAI);
 
+      setMessageLog(updatedLogWithAI);
+      
+    } catch (error) {
+      console.error("Error handling server message: " + error);
+    }
+  };
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
@@ -151,7 +165,11 @@ export const useAudioChatLogic = (props) => {
 
     detectSilence();
   };
-
+  console.log("+-+-+-+-+-+-+-+-+-+-+-+-+");
+  console.log("contant update of messagelog");
+  console.log(messageLog);
+  console.log("+-+-+-+-+-+-+-+-+-+-+-+-+");
+  
   const stopSilenceDetection = () => {
     clearTimeout(silenceTimeout.current);
     silenceTimeout.current = null;
@@ -172,5 +190,6 @@ export const useAudioChatLogic = (props) => {
     stopRecording,
     isRecording,
     audioLog,
+    mostRecentReply
   };
 };

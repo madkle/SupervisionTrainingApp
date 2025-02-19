@@ -36,6 +36,7 @@ export const useChatLogic = (props) => {
       ...messageLog,
       { role: "user", content: inputMessage },
     ];
+    
     setMessageLog(updatedMessageLog);
 
     const serverResponse = await callChatAPI(updatedMessageLog, llmModel[0]);

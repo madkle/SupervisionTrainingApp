@@ -4,7 +4,10 @@ import TestingSuite from "./comp/TestingSuite/testingSuite.jsx";
 import HomePage from "./comp/mainPage/homePage.jsx";
 
 export const Context = React.createContext();
-
+const standardScenario = {
+  name: "Jason",
+  voice: "alloy"
+}
 const standardData = {
   norwegian: [
     {
@@ -80,7 +83,7 @@ function App() {
   const toggleTesting = () => {
     setShowTestingSuite(!showTestingSuite);
   };
-  const [chosenScenario, setChosenScenario] = useState("");
+  const [chosenScenario, setChosenScenario] = useState(standardScenario);
   const [language, setLanguage] = useState("norwegian");
   const selectedInitialData =
     language === "norwegian" ? standardData.norwegian : standardData.english;

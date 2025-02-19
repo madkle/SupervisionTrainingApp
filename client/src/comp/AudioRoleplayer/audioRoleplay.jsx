@@ -114,38 +114,48 @@ const AudioRecorder = (props) => {
     useAutoStop,
     isRecording,
     isWaitingForServer,
+    mostRecentReply,
   } = useAudioChatLogic(props);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <section id="audioContainer">
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        
-        
-      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}></div>
       <div className="AudioGrid">
-        <div id="micBtn" onClick={() => {
-          setIsLoading(!isLoading)
-        }}>
-          {isLoading? <div class="loader"></div> : <img src={micIcon}></img>}
-          
+        <div
+          id="micBtn"
+          onClick={() => {
+            startRecording();
+          }}
+        >
+          {isRecording || isWaitingForServer ? (
+            <div className="loader"></div>
+          ) : (
+            <img src={micIcon}></img>
+          )}
         </div>
         <div id="avatarContainer">
           <img src={standardAvatar}></img>
         </div>
-        <div id="replyContainer" hidden={false}>
-          <h1>Lærling:</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolo
-        </p>
+        <div id="replyContainer" hidden={!mostRecentReply}>
+          {mostRecentReply ? (
+            <>
+              <h1>Lærling:</h1>
+              <p>{mostRecentReply}</p>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div id="endBtn">
-          <button>Avslutt</button>
+          <button
+            onClick={() => {
+              stopRecording();
+            }}
+          >
+            Avslutt
+          </button>
         </div>
-
       </div>
     </section>
   );
