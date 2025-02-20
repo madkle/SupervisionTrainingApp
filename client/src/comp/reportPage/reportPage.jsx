@@ -44,7 +44,7 @@ const ReportPage = (props) => {
   return (
     <div className="report-box">
       <h1>Report</h1>
-
+    {/*  
       <section>
         <h2>Transcript</h2>
         <Transcription
@@ -58,10 +58,11 @@ const ReportPage = (props) => {
       </section>
       <section>
         <h2>Feedback</h2>
-        <button onClick={getFeedback}>Generer tilbakemelding</button>
+       
         {feedbackModule}
       </section>
-
+*/}
+ <button onClick={getFeedback}>Generer tilbakemelding</button>
       <section>{pdfSection}</section>
       {/*
       <section>

@@ -1,7 +1,15 @@
 import React, { useState, useContext } from "react";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  Font,
+} from "@react-pdf/renderer";
 import { Context } from "../../App";
-
+//disable hyponation
+Font.registerHyphenationCallback((word) => [word]);
 // Create styles
 const styles = StyleSheet.create({
   page: {
@@ -11,7 +19,6 @@ const styles = StyleSheet.create({
   section: {
     margin: 10,
     padding: 10,
-    flexGrow: 1,
   },
   text: {
     margin: 12,
@@ -27,6 +34,36 @@ const styles = StyleSheet.create({
     margin: 12,
   },
 });
+const transcriptStyle = StyleSheet.create({
+  transcriptContainer: {
+    gap: "12px",
+    display: "flex",
+  },
+  chatGroup: {
+    maxWidth: "90%",
+    marginLeft: "15px",
+  },
+  chatLine: {
+    borderBottom: "1px dotted #000",
+  },
+});
+const Transcription = ({ chatLog }) => {
+  const test = () => {
+    return chatLog.map((item, index) => {
+      if (item.role !== "system") {
+        return (
+          <View key={"chatline " + index} style={transcriptStyle.chatLine}>
+            <View style={transcriptStyle.chatGroup}>
+              <Text>{item.role === "user" ? "Veileder: " : "Lærling: "}</Text>
+              <Text>{item.content}</Text>
+            </View>
+          </View>
+        );
+      }
+    });
+  };
+  return <View style={transcriptStyle.transcriptContainer}>{test()}</View>;
+};
 const FeedbackSection = ({ feedback }) => {
   let data = "";
   if (feedback !== "") {
@@ -36,7 +73,6 @@ const FeedbackSection = ({ feedback }) => {
       data = JSON.parse(feedback);
     }
   }
-  console.log(data);
 
   return (
     <View style={styles.section}>
@@ -55,22 +91,14 @@ const FeedbackSection = ({ feedback }) => {
 };
 // Create Document Component
 const MyDocument = ({ feedback, chatLog }) => {
-  /*
-   const InfoObject = useContext(Context);
-  console.log(Context);
- 
-  const [messageLog] = InfoObject.chatlog;
-  const [feedback, setFeedback] = InfoObject.feedback;
-  */
-  console.log(chatLog);
-  console.log(feedback);
-
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
-          <Text>Test1</Text>
+          <Transcription chatLog={chatLog} />
         </View>
+      </Page>
+      <Page size="A4" style={styles.page}>
         <FeedbackSection feedback={feedback} />
       </Page>
     </Document>
