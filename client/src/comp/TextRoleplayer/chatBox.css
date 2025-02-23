@@ -1,97 +1,103 @@
-/* OllamaChat.css */
+@import "../styleguide.css";
+
+/* Outer Chat Container with Skewmorphism Effect */
 .ollama-chat {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-}
+  font-family: var(--font-base);
+  padding: var(--spacing-xl);
+  max-width: 50rem; /* approximately 800px */
+  margin: auto;
+  background: var(--bg-gradient);
+  border: var(--standard-border);
+  border-radius: var(--border-radius);}
 
+/* Chat Message Area */
 .chat-container {
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    background: white;
-    border-radius: 8px;
+  border: var(--standard-border);
+  padding: var(--spacing-md);
+  height: 18.75rem; /* 300px converted to rem (300/16) */
+  overflow-y: auto;
+  margin-bottom: var(--spacing-xl);
+  background: var(--color-dark-purple);
+  border-radius: calc(var(--border-radius) - 2px);
 }
 
+/* Individual Chat Messages */
 .message {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-gray);
+  color: var(--color-white);
 }
 
 .message.user {
-    text-align: right;
-    color: blue;
+  text-align: right;
 }
 
 .message.assistant {
-    text-align: left;
-    color: green;
+  text-align: left;
 }
 
-.input-container  {
-    display: flex;
-    gap: 10px;
+/* Input Container for Text and Button */
+.input-container {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
-.input-container >input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.input-container > input[type="text"] {
+  flex: 1;
+  padding: var(--spacing-sm);
+  border: var(--standard-border);
+  border-radius: var(--border-radius);
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
-.input-container >button {
-    padding: 10px 20px;
-    background: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.input-container > button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-light-purple);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  box-shadow: var(--box-shadow);}
+
+.input-container > button:disabled {
+  background: var(--color-gray);
+  cursor: not-allowed;
 }
 
-.input-container >button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-
+/* Play Message Button */
 button.play-message {
-    padding: 5px 10px;
-    font-size: 0.9rem;
+  padding: var(--spacing-sm) var(--spacing-lg); /* approximately 5px 10px */
+  font-size: var(--spacing-lg);
+  background: var(--color-dark-purple);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius);
 }
 
+/* Audio Log Area */
 .audio-log {
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
+  margin-top: var(--spacing-xl);
+  border: var(--standard-border);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  background: var(--color-dark-purple);
 }
 
 .audio-entry {
-    margin-bottom: 10px;
+  margin-bottom: var(--spacing-sm);
 }
 
-.saveBox{
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    height: fit-content;
-    align-items: center;
+/* Save and End Boxes */
+.saveBox,
+.endBox {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  align-items: center;
 }
 
-.saveBox >p {
-    margin: 0;
-}
-
-.endBox{
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    height: fit-content;
-    align-items: center;
+.saveBox > p,
+.endBox > p {
+  margin: 0;
 }

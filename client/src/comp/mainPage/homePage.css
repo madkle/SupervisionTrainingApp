@@ -1,3 +1,6 @@
+@import "../styleguide.css";
+
+
 #homeContainer {
   padding: 1em 5em;
   justify-self: center;

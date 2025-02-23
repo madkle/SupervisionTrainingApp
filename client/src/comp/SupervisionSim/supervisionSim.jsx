@@ -11,10 +11,10 @@ const SupervisionSimulation = () => {
 
   return (
     <>
-      {/*
+      
       <section>{isSimRunning && <TextChat language={language} />}</section>
-      */}
-      {isSimRunning && <AudioRoleplayer language={language} />}
+      {/*
+      {isSimRunning && <AudioRoleplayer language={language} />}*/}
     </>
   );
 };

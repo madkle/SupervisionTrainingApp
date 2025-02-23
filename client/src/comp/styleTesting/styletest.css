@@ -1,0 +1,49 @@
+@import "../styleguide.css"; 
+
+/* Global Styles */
+body {
+    background-color: var(--bg-primary);
+    color: var(--color-white);
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Example Container with Skew Effect */
+  .skew-container {
+    background: var(--bg-gradient);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin: 2rem;
+  }
+  
+  
+  /* Buttons with Accent Color */
+  .button {
+    background-color: var(--color-light-purple);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+  }
+  
+  .button:hover {
+    background-color: var(--color-dark-purple);
+  }
+  
+  /* Headings */
+  h1, h2, h3 {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 1rem;
+  }
+  
+  /* Paragraphs */
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }

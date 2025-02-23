@@ -12,10 +12,13 @@ const WelcomePage = () => {
   return (
     <div>
       <h1>Velkommen</h1>
+      
+      {/* Scenario container */}
       <div id="scenarioContainer">
         <ScenarioCard avatar={standardAvatar} name={"Ola"} />
         <ScenarioCard avatar={standardAvatar} name={"Per"} />
       </div>
+      {/* Language container */}
       <div>
         <section id="languageContainer">
           <div className="languageSelector">
@@ -30,6 +33,8 @@ const WelcomePage = () => {
               <option value={"english"}>English</option>
             </select>
           </div>
+          
+      {/* Language warning */}
           <div style={{ minWidth: "361px", minHeight: "185px" }}>
             {language === "norwegian" && (
               <div className="warningBox">
@@ -41,7 +46,8 @@ const WelcomePage = () => {
             )}
           </div>
         </section>
-
+            
+      {/* selections container */}
         <section>
           <label>
             <input

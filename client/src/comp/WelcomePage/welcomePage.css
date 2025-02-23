@@ -1,72 +1,67 @@
-#homeContainer {
-    padding: 1em 5em;
-    justify-self: center;
-    min-height: 90vh;
-    text-align: center;
-    width: 100%;
-  }
-  .visualize {
-    border: 1px grey solid;
-  }
-  .scenarioCard {
-    min-height: 20em;
-    min-width: 35em;
-    max-width: 55em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px grey solid;
-  }
-  .cardSelected {
-    background-color: green;
-  }
-  .avatarImage {
-    border: solid 1px #dbdbdb7d;
-    width: 250px;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    margin: 0 16pt;
-    box-shadow: 3px 7px 4px 1px rgb(165, 165, 165);
-  }
-  .avatarTextContainer {
-    width: 100%;
-    height: 100%;
-    margin: 0 16pt;
-    display: flex;
-    flex-direction: column;
-  }
-  .avatarTextContainer > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8pt;
-  }
-  #scenarioContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 8pt;
-    align-items: center;
-  }
-  
-  .languageSelector {
-    display: flex;
-    gap: 1em;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  #languageContainer{
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-  }
-  
-  .warningBox{
-    background-color: ivory;
-    border: 1px solid #000;
-    border-radius: 5px;
-    padding: 4px;
-  }
+@import "../styleguide.css";
+/* Scenario card */
+.scenarioCard {
+  min-height: 20em;
+  min-width: 35em;
+  max-width: 55em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: var(--standard-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md) var(--spacing-xl);
+  box-shadow: var(--box-shadow);
+  background: var(--bg-gradient);
+}
+.cardSelected {
+  background: var(--bg-secondary);
+}
+/* Avatar */
+.avatarImage {
+  border: var(--standard-border);
+  width: 250px;
+  border-radius: 100%;
+  aspect-ratio: 1;
+  margin: var(--spacing-0) var(--spacing-xl);
+  box-shadow: var(--box-shadow);
+}
+.avatarTextContainer {
+  margin: var(--spacing-0) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+.avatarTextContainer > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+#scenarioContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+/*language */
+.languageSelector {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+  justify-content: center;
+}
+
+#languageContainer {
+  display: flex;
+  gap: var(--spacing-lg);;
+  justify-content: center;
+}
+
+.warningBox {
+  background-color: ivory;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 4px;
+  color: #000;
+}

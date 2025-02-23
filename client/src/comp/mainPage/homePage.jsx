@@ -4,7 +4,6 @@ import SupervisionSimulation from "../SupervisionSim/supervisionSim.jsx";
 import ReportPage from "../reportPage/reportPage";
 import WelcomePage from "../WelcomePage/welcomePage.jsx";
 import { Context } from "../../App.jsx";
-
 const HomePage = () => {
   const InfoObject = useContext(Context);
   const [isSimRunning, setSimRunning] = InfoObject.simRunning;
@@ -22,9 +21,9 @@ const HomePage = () => {
       {isSimRunning && <SupervisionSimulation />}
 
       <br />
-      {/*
-       */}
-      {<ReportPage />}
+     
+      
+      {<ReportPage />} 
     </div>
   );
 };

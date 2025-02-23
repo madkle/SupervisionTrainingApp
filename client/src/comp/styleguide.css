@@ -1,0 +1,90 @@
+:root{
+    /* Color Palette */
+    --color-dark-purple: #2C003E;  /* Primary dark purple */
+    --color-black: #000000;        /* Base background */
+    --color-light-purple: #6A0DAD; /* Accent color for highlights and hover effects */
+    --color-white: #FFFFFF;        /* Text and contrast */
+    --color-gray: #333333;         /* Secondary text / borders */
+    --color-transparent-purple: rgba(96, 7, 160, 0.4); /* Transparent purple */
+
+
+  /* Spacing Scale in rem units */
+    --spacing-0: 0rem;
+    --spacing-xs: 0.25rem;    /* Extra Small */
+    --spacing-sm: 0.5rem;     /* Small */
+    --spacing-md: 0.75rem;    /* Medium */
+    --spacing-lg: 1rem;       /* Large */
+    --spacing-xl: 1.5rem;     /* Extra Large */
+    --spacing-2xl: 2rem;      /* 2X Large */
+    --spacing-3xl: 2.5rem;    /* 3X Large */
+    --spacing-4xl: 3rem;      /* 4X Large */
+    --spacing-5xl: 3.5rem;    /* 5X Large */
+    --spacing-6xl: 4rem;      /* 6X Large */
+
+
+    /* Typography */
+    --font-base: 'Roboto', sans-serif;
+    --font-size-base: 16px;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+   
+    /* Layout & Effects */
+    --border-radius: 12px;
+    --box-shadow: 8px 8px 20px var(--color-transparent-purple);
+    --transition-speed: 0.3s;
+    --standard-border : 1px solid var(--color-dark-purple);
+    /* Skew Transformation */
+    --skew-angle: 5deg;
+    
+    /* Backgrounds */
+    --bg-primary: var(--color-black);
+    --bg-secondary: var(--color-dark-purple);
+    --bg-gradient: linear-gradient(145deg, var(--color-dark-purple), var(--color-black));
+    
+}
+/* Global Styles */
+body {
+    background-color: var(--bg-primary);
+    color: var(--color-white);
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    margin: 0;
+    padding: 0;
+  }
+  .skew-container {
+    background: var(--bg-gradient);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transform: skewY(var(--skew-angle));
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    padding: 2rem;
+    width: 300px;
+    text-align: center;
+  }
+  /* Buttons with Accent Color */
+  .button {
+    background-color: var(--color-light-purple);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md) var(--spacing-xl);
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+  }
+  
+  .button:hover {
+    background-color: var(--color-dark-purple);
+  }
+  
+  /* Headings */
+  h1, h2, h3 {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  /* Paragraphs */
+  p {
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.5;
+  }
