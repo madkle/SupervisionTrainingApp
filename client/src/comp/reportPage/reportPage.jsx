@@ -9,7 +9,7 @@ import Evaluation from "./evaluation.jsx";
 import Transcription from "./transcription.jsx";
 import TestReport from "./test.jsx";
 import "./reportPageStyle.css";
-import MyDocument from "./pdf.js";
+import ReportPDF from "./pdf.js";
 import { Context } from "../../App.jsx";
 const ReportPage = (props) => {
   const InfoObject = useContext(Context);
@@ -23,18 +23,26 @@ const ReportPage = (props) => {
   const { callOllamaFeedback } = useReportLogic(props);
 
   const getFeedback = async () => {
-    /*
+    
     const feedbackPromise = await callOllamaFeedback(messageLog);
     const response = feedbackPromise.response;
     setFeedbackModule(<Evaluation response={response} />);
     setFeedback(response);
-    */
+    console.log("feedback:");
+    
+    console.log(feedback);
+    
+    console.log("response");
+    console.log(response);
+    console.log("messageLog");
+    console.log(messageLog);
+    
     setPdfSection(
       <PDFViewer id="pdfViewer">
-        <MyDocument
-          feedback={feedback === "" ? exampleEvaluation : feedback}
+        <ReportPDF
+          feedback={response === "" ? exampleEvaluation : response}
           chatLog={
-            messageLog || messageLog.lenght === 1 ? exampleChatLog : messageLog
+            !messageLog || messageLog.lenght === 1 ? exampleChatLog : messageLog
           }
         />
       </PDFViewer>

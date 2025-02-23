@@ -93,7 +93,7 @@ export const useAudioChatLogic = (props) => {
         //adding the response to the message log to be set to the context
         const updatedLogWithAI = [...updatedLog, ServerMessage];
         
-      /*
+      
       const audioURL = await handleAudioResponse(
         ServerMessage.content,
         AIVoice
@@ -102,7 +102,7 @@ export const useAudioChatLogic = (props) => {
         ...audioLog,
         { url: audioURL, text: ServerMessage.content },
       ]);
-      */
+       
         //finished with the response, updating the global log
         setIsWaitingForServer(false);
         setMessageLog(updatedLogWithAI);

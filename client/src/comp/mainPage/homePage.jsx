@@ -11,7 +11,6 @@ const HomePage = () => {
 
   return (
     <div id="homeContainer">
-      {/*
       {!isSimRunning && <WelcomePage />}
       <button
         onClick={() => {
@@ -23,8 +22,9 @@ const HomePage = () => {
       {isSimRunning && <SupervisionSimulation />}
 
       <br />
-      */}
-      {<ReportPage/>}
+      {/*
+       */}
+      {<ReportPage />}
     </div>
   );
 };

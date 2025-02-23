@@ -48,21 +48,22 @@ const transcriptStyle = StyleSheet.create({
   },
 });
 const Transcription = ({ chatLog }) => {
-  const test = () => {
-    return chatLog.map((item, index) => {
-      if (item.role !== "system") {
-        return (
-          <View key={"chatline " + index} style={transcriptStyle.chatLine}>
-            <View style={transcriptStyle.chatGroup}>
-              <Text>{item.role === "user" ? "Veileder: " : "Lærling: "}</Text>
-              <Text>{item.content}</Text>
+  return (
+    <View style={transcriptStyle.transcriptContainer}>
+      {chatLog.map((item, index) => {
+        if (item.role !== "system") {
+          return (
+            <View key={"chatline " + index} style={transcriptStyle.chatLine}>
+              <View style={transcriptStyle.chatGroup}>
+                <Text>{item.role === "user" ? "Veileder: " : "Lærling: "}</Text>
+                <Text>{item.content}</Text>
+              </View>
             </View>
-          </View>
-        );
-      }
-    });
-  };
-  return <View style={transcriptStyle.transcriptContainer}>{test()}</View>;
+          );
+        }
+      })}
+    </View>
+  );
 };
 const FeedbackSection = ({ feedback }) => {
   let data = "";
@@ -90,7 +91,9 @@ const FeedbackSection = ({ feedback }) => {
   );
 };
 // Create Document Component
-const MyDocument = ({ feedback, chatLog }) => {
+const ReportPDF = ({ feedback, chatLog }) => {
+  console.log(chatLog);
+  
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -105,4 +108,4 @@ const MyDocument = ({ feedback, chatLog }) => {
   );
 };
 
-export default MyDocument;
+export default ReportPDF;

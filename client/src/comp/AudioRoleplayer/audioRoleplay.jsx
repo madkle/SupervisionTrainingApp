@@ -119,45 +119,57 @@ const AudioRecorder = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <section id="audioContainer">
-      <div style={{ display: "flex", flexDirection: "column" }}></div>
-      <div className="AudioGrid">
-        <div
-          id="micBtn"
-          onClick={() => {
-            startRecording();
-          }}
-        >
-          {isRecording || isWaitingForServer ? (
-            <div className="loader"></div>
-          ) : (
-            <img src={micIcon}></img>
-          )}
-        </div>
-        <div id="avatarContainer">
-          <img src={standardAvatar}></img>
-        </div>
-        <div id="replyContainer" hidden={!mostRecentReply}>
-          {mostRecentReply ? (
-            <>
-              <h1>Lærling:</h1>
-              <p>{mostRecentReply}</p>
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
-        <div id="endBtn">
-          <button
+    <>
+      <section id="audioContainer">
+        <div style={{ display: "flex", flexDirection: "column" }}></div>
+        <div className="AudioGrid">
+          <div
+            id="micBtn"
             onClick={() => {
-              stopRecording();
+              startRecording();
             }}
           >
-            Avslutt
-          </button>
+            {isRecording || isWaitingForServer ? (
+              <div className="loader"></div>
+            ) : (
+              <img src={micIcon}></img>
+            )}
+          </div>
+          <div id="avatarContainer">
+            <img src={standardAvatar}></img>
+          </div>
+          <div id="replyContainer" hidden={!mostRecentReply}>
+            {mostRecentReply ? (
+              <>
+                <h1>Lærling:</h1>
+                <p>{mostRecentReply}</p>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="endBtn">
+            <button
+              onClick={() => {
+                stopRecording();
+              }}
+            >
+              Avslutt
+            </button>
+          </div>
         </div>
+      </section>
+      <div>
+        {audioLog.map((audio, index) => {
+          return (
+            <div key={"audioList " + index}>
+              <p>{audio.text}</p>
+              <audio src={audio.url} controls/>
+            </div>
+          );
+        })}
       </div>
-    </section>
+    </>
   );
 };
 export default AudioRecorder;
