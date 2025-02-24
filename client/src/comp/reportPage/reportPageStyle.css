@@ -3,6 +3,7 @@
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 10px;
+  color:#000;
 }
 #transcript-container {
   display: flex;

@@ -1,97 +1,212 @@
+@import "../styleguide.css";
+
 #audioContainer {
-  width: 900px;
-  height: 900px;
-  background-color: black;
-  border: 1px dotted grey;
+  height: 90vh;
+  background-color: var(--color-dark-purple);
+  display: flex;
+  flex-direction: row;
+  border: var(--standard-border);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
   overflow: hidden;
-  position: relative;
 }
-.AudioGrid {
-  position: absolute;
-  top: 0;
-  width: 100%;
+#audioGrid {
+  background-color: var(--color-gray);
   height: 100%;
+  width: 70%;
+  overflow: hidden;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
   align-items: center;
   justify-items: center;
-  z-index: 1;
-}
-#micBtn {
-  grid-area: 5 / 2 / 6 / 3;
-  background-color: rgb(59, 59, 59);
-  border-radius: 100%;
-  width: 60%;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
+  
+  
+  border-bottom: none;
+  border-right: 3px solid var(--color-dark-purple);
 }
 
-#micBtn:hover {
-  background-color: rgb(83, 83, 83);
-  cursor: pointer;
-}
-#micBtn > img {
-  width: 80%;
-}
-
+/* Avatar */
 #avatarContainer {
-  grid-area: 1 / 1 / 6 / 6;
+  height: 100%;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  grid-area: 1 / 1 / 6 / 4;
 }
 
-#avatarContainer > img {
-  width: 100%;
-}
-
-#replyContainer {
-  grid-area: 3 / 3 / 4 / 4;
-  color: #fff;
-  background-color: rgba(47, 0, 75, 0.8);
-  padding: 8px;
-  padding-left: 24px;
-  text-align: left;
-  border-radius: 16px 16px 16px 0;
-}
-
+/*end button*/
 #endBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   grid-area: 5 / 3 / 6 / 4;
 }
 #endBtn > button {
-  background-color: rgb(103, 0, 163);
+  background-color: var(--color-light-purple);
   padding: 20px 50px;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size:xx-large;
+  font-size: xx-large;
 }
+#endBtn > button:hover {
+  background-color: var(--color-dark-purple);
+}
+/* Mic Button */
+#micBtn {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  grid-area: 5 / 2 / 6 / 3;
+  background-color: var(--color-light-purple);
+  border-radius: 100%;
+  aspect-ratio: 1;
+}
+#micBtn > img {
+  width: 75%;
+}
+
+#micBtn:hover {
+  background-color: var(--color-dark-purple);
+  cursor: pointer;
+}
+/* last reply box */
+#replyContainer {
+  background-color: var(--color-transparent-purple);
+  grid-area: 2/3/4/4;
+  border: var(--standard-border);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg) var(--spacing-sm);
+}
+/* transcript */
+#transcript {
+  height: 100%;
+  width: 30%;
+  background-color: var(--color-gray);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+.transcriptLine{
+  text-align: left;
+
+}
+/* if the screen is not big */
+@media screen and (max-width: 1200px) {
+  #audioContainer {
+    flex-direction: column;
+  }
+
+  #audioGrid {
+    height: 100%;
+    width: 100%;
+    border-bottom: 3px solid var(--color-dark-purple);
+    border-right: none;
+  }
+
+  #transcript {
+    height: 40%;
+    width: 100%;
+  }
+}
+
+/* loader */
+
 .loader {
-    width: 100px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    border: 8px solid #952bdb;
-    animation:
-      l20-1 0.8s infinite linear alternate,
-      l20-2 1.6s infinite linear;
+  width: 100px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid var(--color-white);
+  animation: l20-1 0.8s infinite linear alternate, l20-2 1.6s infinite linear;
+}
+@keyframes l20-1 {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
   }
-  @keyframes l20-1{
-     0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
-     12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
-     25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
-     50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-     62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-     75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
-     100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+  12.5% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 0%,
+      100% 0%,
+      100% 0%
+    );
   }
-  @keyframes l20-2{ 
-    0%    {transform:scaleY(1)  rotate(0deg)}
-    49.99%{transform:scaleY(1)  rotate(135deg)}
-    50%   {transform:scaleY(-1) rotate(0deg)}
-    100%  {transform:scaleY(-1) rotate(-135deg)}
+  25% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 100%,
+      100% 100%,
+      100% 100%
+    );
   }
+  50% {
+    clip-path: polygon(
+      50% 50%,
+      0 0,
+      50% 0%,
+      100% 0%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  62.5% {
+    clip-path: polygon(
+      50% 50%,
+      100% 0,
+      100% 0%,
+      100% 0%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  75% {
+    clip-path: polygon(
+      50% 50%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+  100% {
+    clip-path: polygon(
+      50% 50%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      50% 100%,
+      0% 100%
+    );
+  }
+}
+@keyframes l20-2 {
+  0% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  49.99% {
+    transform: scaleY(1) rotate(135deg);
+  }
+  50% {
+    transform: scaleY(-1) rotate(0deg);
+  }
+  100% {
+    transform: scaleY(-1) rotate(-135deg);
+  }
+}

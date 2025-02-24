@@ -6,101 +6,7 @@ import standardAvatar from "./files/avatar.png";
 import "./audioRoleplay.css";
 import { useAudioChatLogic } from "./audioRoleplayLogic.js";
 import micIcon from "./files/micIcon.svg";
-const OldAudioRecorder = (props) => {
-  const {
-    setUseAutoStop,
-    setSilenceDuration,
-    startRecording,
-    stopRecording,
-    audioLog,
-    recordedAudios,
-    silenceDuration,
-    useAutoStop,
-    isRecording,
-    isWaitingForServer,
-  } = useAudioChatLogic(props);
-
-  return (
-    <div className="audio-recorder">
-      <h2>Available Recordings:</h2>
-      <section>
-        {recordedAudios.map((currentAudio, index) => (
-          <div key={index}>
-            <audio controls src={currentAudio.url}></audio>
-            <p>Transcription: {currentAudio.transcription}</p>
-          </div>
-        ))}
-      </section>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={useAutoStop}
-            onChange={(e) => setUseAutoStop(e.target.checked)}
-          />
-          Enable Automatic Stop
-        </label>
-        {useAutoStop && (
-          <div>
-            <label>
-              Silence Duration (seconds):
-              <input
-                type="number"
-                min="1"
-                value={silenceDuration}
-                onChange={(e) => setSilenceDuration(Number(e.target.value))}
-              />
-            </label>
-          </div>
-        )}
-      </div>
-
-      <button onClick={startRecording} disabled={isWaitingForServer}>
-        Start Recording
-      </button>
-      <button onClick={stopRecording} disabled={isWaitingForServer}>
-        Stop Recording
-      </button>
-      <div
-        style={{
-          margin: "16px 0",
-          minHeight: "21px",
-        }}
-      >
-        {isRecording ? <p>Recording in progress...</p> : <></>}
-        {isWaitingForServer ? <p>Waiting for response...</p> : <></>}
-      </div>
-      <div
-        style={{
-          border: "1px solid #ccc",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
-        {!audioLog ? (
-          <></>
-        ) : (
-          audioLog.map((currentAudio, index) => (
-            <div key={`Audioresponse ${index}`}>
-              <section style={{ display: "flex" }}>
-                <p>{index}:</p>{" "}
-                {audioLog.length === index + 1 ? (
-                  <audio src={currentAudio.url} controls autoPlay />
-                ) : (
-                  <audio src={currentAudio.url} controls />
-                )}
-                <br />
-              </section>
-              <p>{currentAudio.text}</p>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-};
+import { exampleChatLog } from "../reportPage/reportLogic.js";
 
 const AudioRecorder = (props) => {
   const {
@@ -115,26 +21,100 @@ const AudioRecorder = (props) => {
     isRecording,
     isWaitingForServer,
     mostRecentReply,
+    sessionState,messageLog
   } = useAudioChatLogic(props);
-  const [isLoading, setIsLoading] = useState(false);
+  
+  const recordingAction = () => {
+    switch (sessionState) {
+      case "recording":
+        stopRecording();
+        break;
+      case "notRecording":
+        startRecording();
+        break;
+      default:
+        break;
+    }
+  };
+  const recordingButton = () => {
+    let state = "";
+    switch (sessionState) {
+      case "recording":
+        state = <div>Recording</div>;
+        break;
+      case "waiting":
+        state = <div className="loader"></div>;
+        break;
+
+      default:
+        state = <img src={micIcon}></img>;
+        break;
+    }
+    return state;
+  };
 
   return (
     <>
       <section id="audioContainer">
-        <div style={{ display: "flex", flexDirection: "column" }}></div>
+        <div id="audioGrid">
+          <div
+            id="micBtn"
+            onClick={() => {
+              recordingAction();
+            }}
+          >
+            {recordingButton()}
+          </div>
+          <div id="avatarContainer">
+            <img className="avatar" src={standardAvatar} />
+          </div>
+          <div id="endBtn">
+            <button>Avslutt</button>
+          </div>
+          <div id="replyContainer" hidden={!mostRecentReply}>
+            {mostRecentReply ? (
+              <>
+                <h1>Lærling:</h1>
+                <p>{mostRecentReply}</p>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <div id="transcript">
+          {messageLog.map((chat, index) => {
+            if (chat.role !== "system") {
+              return (
+                <div key={"chatline " + index} className="transcriptLine">
+                  <div>
+                    <span>
+                      {chat.role === "user" ? "Veileder: " : "Lærling: "}
+                    </span>
+                    <span>{chat.content}</span>
+                  </div>
+                </div>
+              );
+            }
+          })}
+        </div>
+      </section>
+    </>
+  );
+};
+export default AudioRecorder;
+/*
+      <section id="audioContainer">
         <div className="AudioGrid">
           <div
             id="micBtn"
             onClick={() => {
-              startRecording();
+              recordingAction();
             }}
           >
-            {isRecording || isWaitingForServer ? (
-              <div className="loader"></div>
-            ) : (
-              <img src={micIcon}></img>
-            )}
+            {recordingButton()}
           </div>
+
           <div id="avatarContainer">
             <img src={standardAvatar}></img>
           </div>
@@ -149,27 +129,18 @@ const AudioRecorder = (props) => {
             )}
           </div>
           <div id="endBtn">
-            <button
-              onClick={() => {
-                stopRecording();
-              }}
-            >
-              Avslutt
-            </button>
+            <button>Avslutt</button>
           </div>
         </div>
+        <div className="chat"></div>
       </section>
       <div>
         {audioLog.map((audio, index) => {
           return (
             <div key={"audioList " + index}>
               <p>{audio.text}</p>
-              <audio src={audio.url} controls/>
+              <audio src={audio.url} controls />
             </div>
           );
         })}
-      </div>
-    </>
-  );
-};
-export default AudioRecorder;
+      </div> */

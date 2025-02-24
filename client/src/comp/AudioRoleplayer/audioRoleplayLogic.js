@@ -12,6 +12,7 @@ export const useAudioChatLogic = (props) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isWaitingForServer, setIsWaitingForServer] = useState(false);
   const [mostRecentReply, setMostRecentReply] = useState("");
+  const [sessionState, setSessionState] = useState("notRecording");
   //audio recorders
   const mediaStream = useRef(null);
   const audioContext = useRef(null);
@@ -34,6 +35,7 @@ export const useAudioChatLogic = (props) => {
 
   const startRecording = async () => {
     setIsRecording(true);
+    setSessionState("recording")
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStream.current = stream;
@@ -54,6 +56,7 @@ export const useAudioChatLogic = (props) => {
 
       mediaRecorder.current.onstop = async () => {
         setIsWaitingForServer(true);
+        setSessionState("waiting")
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
         // Pass the Blob to the transcription function
@@ -70,6 +73,7 @@ export const useAudioChatLogic = (props) => {
       if (useAutoStop) startSilenceDetection();
     } catch (error) {
       setIsRecording(false);
+      setSessionState("notRecording")
       console.error("Error accessing microphone:", error);
     }
   };
@@ -92,19 +96,19 @@ export const useAudioChatLogic = (props) => {
 
         //adding the response to the message log to be set to the context
         const updatedLogWithAI = [...updatedLog, ServerMessage];
-        
-      
-      const audioURL = await handleAudioResponse(
-        ServerMessage.content,
-        AIVoice
-      );
-      setAudioLog([
-        ...audioLog,
-        { url: audioURL, text: ServerMessage.content },
-      ]);
-       
+
+        const audioURL = await handleAudioResponse(
+          ServerMessage.content,
+          AIVoice
+        );
+        setAudioLog([
+          ...audioLog,
+          { url: audioURL, text: ServerMessage.content },
+        ]);
+
         //finished with the response, updating the global log
         setIsWaitingForServer(false);
+        setSessionState("notRecording")
         setMessageLog(updatedLogWithAI);
 
         //clearing the transcription for later
@@ -119,6 +123,7 @@ export const useAudioChatLogic = (props) => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
       setIsRecording(false);
+      setSessionState("notRecording")
     }
     if (mediaStream.current) {
       mediaStream.current.getTracks().forEach((track) => track.stop());
@@ -180,5 +185,8 @@ export const useAudioChatLogic = (props) => {
     isRecording,
     audioLog,
     mostRecentReply,
+    sessionState,
+    setSessionState,
+    messageLog
   };
 };
