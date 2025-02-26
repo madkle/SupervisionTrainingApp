@@ -12,7 +12,7 @@ const TextChat = (props) => {
     setInputMessage,
     handleSendMessage,
     handleKeyDown,
-    handlePlayAudio,setSimState,
+    handlePlayAudio,setSimState,chosenScenario
   } = useChatLogic(props);
 
   return (
@@ -23,9 +23,10 @@ const TextChat = (props) => {
         {messageLog !== null && messageLog
           .filter((msg) => msg.role !== "system")
           .map((msg, index) => (
+            
             <div key={index} className={`message ${msg.role}`}>
               <strong>
-                {msg.role === "assistant" ? msg.character?.name : msg.role}:
+                {msg.role === "assistant" ? chosenScenario.name : "Deg"}:
               </strong>{" "}
               {msg.content}
               {msg.role === "assistant" && (

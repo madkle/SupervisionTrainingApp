@@ -4,7 +4,7 @@ import standardAvatar from "./files/avatar.png";
 import ScenarioCard from "./scenarioCard.jsx";
 import "./welcomePage.css";
 
-import {scenarioLogic} from "../scenario/scenarioLogic.js";
+import { scenarioLogic } from "../scenario/scenarioLogic.js";
 const WelcomePage = () => {
   const InfoObject = useContext(Context);
   const [language, setLanguage] = InfoObject.language;
@@ -12,27 +12,27 @@ const WelcomePage = () => {
   const [messageLog, setMessageLog] = InfoObject.chatlog;
   const [scenario] = InfoObject.scenario;
   const [, setSimState] = InfoObject.simState;
-   const {
-    scenarioList,
-    } = scenarioLogic();
+  const { scenarioList } = scenarioLogic();
   return (
     <div>
       <h1>Velkommen</h1>
-      
-      {/* Scenario container */}
-      <div id="scenarioContainer">
-        {scenarioList.map((scenario,index)=>{
-          
-        return <ScenarioCard key={"Scenario " + (index+1)} avatar={standardAvatar} scenario={scenario} />
-
-        })}
-        {/* 
-        <ScenarioCard avatar={standardAvatar} name={"Ola"} />
-        <ScenarioCard avatar={standardAvatar} name={"Per"} />*/}
-      </div>
-      <br/>
-      {/* Language container */}
-      <div>
+      <section>
+        {/* Scenario container */}
+        <div id="scenarioContainer">
+          {scenarioList.map((scenario, index) => {
+            return (
+              <ScenarioCard
+                key={"Scenario " + (index + 1)}
+                avatar={standardAvatar}
+                scenario={scenario}
+              />
+            );
+          })}
+        </div>
+      </section>
+      <br />
+      {/* Language container
+      <section>
         <section id="languageContainer">
           <div className="languageSelector">
             <p>Choose language</p>
@@ -46,8 +46,7 @@ const WelcomePage = () => {
               <option value={"english"}>English</option>
             </select>
           </div>
-          
-      {/* Language warning */}
+
           <div style={{ minWidth: "361px", minHeight: "185px" }}>
             {language === "norwegian" && (
               <div className="warningBox">
@@ -59,50 +58,53 @@ const WelcomePage = () => {
             )}
           </div>
         </section>
-            
-      <br/>
+        <br />
+      </section>
+       */}
       {/* selections container */}
-        <section>
-          <label>
-            <input
-              type="checkbox"
-              checked={useAudio}
-              onChange={() => {
-                setUseAudio(!useAudio);
+      <section>
+        <label>
+          <input
+            type="checkbox"
+            checked={useAudio}
+            onChange={() => {
+              setUseAudio(!useAudio);
+            }}
+          />
+          Generate Text to Speech automatically
+        </label>
+      </section>
+      <br />
+      <section>
+        {!scenario ? (
+          <p>Velg scenario før du kan starte</p>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                setSimState("textChat");
+                setMessageLog([
+                  { role: "system", content: scenario.initialPrompt },
+                ]);
               }}
-            />
-            Generate Text to Speech automatically
-          </label>
-        </section>
-      </div>
-      <br/>
-      {!scenario ? (
-        <p>Velg Scenario</p>
-      ) : (<>
-        <button
-          onClick={() => {
-            setSimState("textChat");
-            setMessageLog([
-              { role: "system", content: scenario.initialPrompt },
-            ]);
-          }}
-          disabled={!scenario}
-        >
-          Start Text Chat
-        </button>
-        <button
-        onClick={() => {
-          setSimState("voiceChat");
-          setMessageLog([
-            { role: "system", content: scenario.initialPrompt },
-          ]);
-        }}
-        disabled={!scenario}
-      >
-        Start Voice Chat
-      </button></>
-      )}
-     
+              disabled={!scenario}
+            >
+              Start Text Chat
+            </button>
+            <button
+              onClick={() => {
+                setSimState("voiceChat");
+                setMessageLog([
+                  { role: "system", content: scenario.initialPrompt },
+                ]);
+              }}
+              disabled={!scenario}
+            >
+              Start Voice Chat
+            </button>
+          </>
+        )}
+      </section>
     </div>
   );
 };

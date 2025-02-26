@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import "./homePage.css";
-import SupervisionSimulation from "../SupervisionSim/supervisionSim.jsx";
 import { Context } from "../../App.jsx";
 import TextChat from "../TextRoleplayer/OllamaChat.jsx";
 import AudioRoleplayer from "../AudioRoleplayer/audioRoleplay";
@@ -11,8 +10,6 @@ const HomePage = () => {
   const [language] = InfoObject.language;
   const [simState] = InfoObject.simState;
   const displaySim = (state) => {
-    let comp = <></>;
-
     switch (state) {
       case "textChat":
         return <TextChat language={language} />;

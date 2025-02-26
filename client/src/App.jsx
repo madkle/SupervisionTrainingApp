@@ -6,8 +6,8 @@ import HomePage from "./comp/mainPage/homePage.jsx";
 export const Context = React.createContext();
 const standardScenario = {
   name: "Jason",
-  voice: "alloy"
-}
+  voice: "alloy",
+};
 /*
 const standardData = {
   norwegian: [
@@ -95,7 +95,7 @@ function App() {
   const [isSimRunning, setSimRunning] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [chosenScenario, setChosenScenario] = useState(/*standardScenario*/);
-  const [simState, setSimState] = useState("")
+  const [simState, setSimState] = useState("");
   const InfoObject = {
     language: [language, setLanguage],
     scenario: [chosenScenario, setChosenScenario],
@@ -103,14 +103,16 @@ function App() {
     feedback: [feedback, setFeedback],
     generateAudio: [useAudio, setUseAudio],
     simRunning: [isSimRunning, setSimRunning],
-    simState: [simState, setSimState]
+    simState: [simState, setSimState],
   };
   return (
     <Context.Provider value={InfoObject}>
       <div className="App">
+        {/*  
         <header className="App-header">
           <button onClick={toggleTesting}>T</button>
         </header>
+        */}
         <main className="App-main">
           {showTestingSuite ? <TestingSuite /> : <HomePage />}
         </main>

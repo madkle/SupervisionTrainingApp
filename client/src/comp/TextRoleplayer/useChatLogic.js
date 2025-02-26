@@ -11,7 +11,7 @@ export const useChatLogic = (props) => {
   const InfoObject = useContext(Context);
   const [messageLog, setMessageLog] = InfoObject.chatlog;
   const [simState, setSimState] = InfoObject.simState;
-  //const [chosenScenario, setChosenScenario] = InfoObject.scenario;
+  const [chosenScenario] = InfoObject.scenario;
   const [useAudio] = InfoObject.generateAudio;
   //console.log(InfoObject.scenario);
   /*
@@ -91,5 +91,6 @@ export const useChatLogic = (props) => {
     handleSendMessage,
     handleKeyDown,
     handlePlayAudio,
+    chosenScenario,
   };
 };

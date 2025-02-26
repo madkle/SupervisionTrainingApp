@@ -31,6 +31,7 @@ export const scenarioLogic = () => {
       
       ### Caseinformasjon:\n- **Navn**: Fatima\n- **Alder**: 19 år\n- **Bakgrunn**: Kom til Norge som flyktning fra Syria i 2016.\n- **Yrke/fagområde**: Lærling på arbeidsplassen i seks måneder.\n- **Språk**: Snakker godt norsk, men kan misforstå beskjeder.\n- **Kommunikasjonsstil**: Høflig, ønsker å lære, men kan være usikker.\n- **Utfordringer**: Misforstår ofte beskjeder, noe som irriterer kollegaene. Har tidligere sagt at hun skal prøve å bli bedre på å spørre, men synes det er vanskelig.\n- **Mål i samtalen**: Har vurdert å slutte, men veilederen vet ikke hvorfor. Fatima må gradvis åpne seg og forklare hva hun føler.`,
     },
+    /*
     {
       id: 1,
       name: "Stein",
@@ -69,7 +70,7 @@ export const scenarioLogic = () => {
       
       ### Caseinformasjon:\n- **Navn**: Jonas\n- **Alder**: 18-19 år\n- **Yrke/fagområde**: Lærling, vært på arbeidsplassen i seks måneder.\n- **Kommunikasjonsstil**: Tilbaketrukket, gir korte svar, virker uinteressert eller usikker.\n- **Utfordringer**: Konsentrasjonsvansker, lav motivasjon, misforståelser om arbeidstid og ferie, lite initiativ.\n- **Mål i samtalen**: Jonas må uttrykke sine ekte følelser om lærlingtiden. Er han motivert for å fortsette? Hva trenger han for å trives og bidra mer aktivt?`
     }
-    
+    */
   ];
   
 
