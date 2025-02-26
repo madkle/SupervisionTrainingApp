@@ -1,5 +1,12 @@
 @import "../styleguide.css";
 
+#homeContainer {
+  padding: 1em 5em;
+  justify-self: center;
+  min-height: 90vh;
+  text-align: center;
+  width: 100%;
+}
 /* Outer Chat Container with Skewmorphism Effect */
 .ollama-chat {
   font-family: var(--font-base);
@@ -51,7 +58,7 @@
   color: var(--color-white);
 }
 
-.input-container > button {
+button {
   padding: var(--spacing-sm) var(--spacing-md);
   background: var(--color-light-purple);
   color: var(--color-white);
@@ -60,7 +67,7 @@
   cursor: pointer;
   box-shadow: var(--box-shadow);}
 
-.input-container > button:disabled {
+button:disabled {
   background: var(--color-gray);
   cursor: not-allowed;
 }

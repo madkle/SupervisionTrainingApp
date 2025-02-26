@@ -31,7 +31,7 @@ export const exampleData = {
       content: "Hello... What would you like to talk about today?",
     },
   ],
-};
+}; 
 
 export const dynamicExampleData = {
   norwegian: [

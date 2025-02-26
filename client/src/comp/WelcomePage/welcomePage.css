@@ -5,7 +5,7 @@
   min-width: 35em;
   max-width: 55em;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   border: var(--standard-border);
@@ -13,6 +13,10 @@
   padding: var(--spacing-md) var(--spacing-xl);
   box-shadow: var(--box-shadow);
   background: var(--bg-gradient);
+}
+.twoCol{
+  display: flex;
+  flex-direction: row;
 }
 .cardSelected {
   background: var(--bg-secondary);

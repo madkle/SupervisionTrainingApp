@@ -10,7 +10,10 @@ import { Context } from "../../App.jsx";
 export const useChatLogic = (props) => {
   const InfoObject = useContext(Context);
   const [messageLog, setMessageLog] = InfoObject.chatlog;
+  const [simState, setSimState] = InfoObject.simState;
+  //const [chosenScenario, setChosenScenario] = InfoObject.scenario;
   const [useAudio] = InfoObject.generateAudio;
+  //console.log(InfoObject.scenario);
   /*
   const initialAudioLog = useNewChat
     ? JSON.parse(localStorage.getItem("audioLog"))
@@ -26,7 +29,6 @@ export const useChatLogic = (props) => {
   const AIVoice = "alloy";
   const llmModel = ["llama3.1", "llama3.2"];
 
-
   const [savedMessage, setSavedMessage] = useState("");
   const handleSendMessage = async () => {
     setIsLoading(true);
@@ -36,10 +38,10 @@ export const useChatLogic = (props) => {
       ...messageLog,
       { role: "user", content: inputMessage },
     ];
-    
+
     setMessageLog(updatedMessageLog);
 
-    const serverResponse = await callChatAPI(updatedMessageLog, llmModel[0]);
+    const serverResponse = await callChatAPI(updatedMessageLog, llmModel[1]);
     await handleServerMessage(serverResponse);
   };
 
@@ -83,6 +85,7 @@ export const useChatLogic = (props) => {
     //audioLog,
     inputMessage,
     isLoading,
+    setSimState,
     setSavedMessage,
     setInputMessage,
     handleSendMessage,

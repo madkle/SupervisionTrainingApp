@@ -15,6 +15,7 @@ const ReportPage = (props) => {
   const InfoObject = useContext(Context);
   const [messageLog] = InfoObject.chatlog;
   const [feedback, setFeedback] = InfoObject.feedback;
+  const [simState, setSimState] = InfoObject.simState;
 
   const [feedbackModule, setFeedbackModule] = useState(
     <Evaluation response={feedback === "" ? exampleEvaluation : feedback} />
@@ -76,6 +77,11 @@ const ReportPage = (props) => {
       <section>
       <TestReport/>
       </section>*/}
+      <br/>
+      <button onClick={() => {
+          setSimState("");
+         
+        }}>Tilbake Hjem</button>
     </div>
   );
 };

@@ -8,6 +8,7 @@ const standardScenario = {
   name: "Jason",
   voice: "alloy"
 }
+/*
 const standardData = {
   norwegian: [
     {
@@ -29,6 +30,7 @@ const standardData = {
     },
   ],
 };
+*/
 /*
 const exampleEvaluation =
   '{\n  "title": "Veiledningssamtale med lærling",\n  "introduction": "I denne rapporten har veilederen og lærlingen gått gjennom en samtale for å identifisere utfordringer og arbeide fremover.",\n  "techniques": [\n    {\n      "name": "Aktiv listening",\n      "description": "Veilederen lytter aktivt til lærlingens uttrykkelser og reflekterer hva de tror lærlingen mener."\n    },\n    {\n      "name": "Empatisk forståelse",\n      "description": "Veilederen forsøker å forstå lærlingens perspektiv og følelser, spesielt når det gjelder åpningen om å være usikker på hvordan å ta hånd om tid og oppgaver."\n    },\n    {\n      "name": "Åpen spørsmålsteknikk",\n      "description": "Veilederen bruker åpne spørsmål for å stimulere lærlingens refleksjon over utfordringene de møter, for eksempel \'Hvordan har du tatt deg god tid i jobben?\'"\n    },\n    {\n      "name": "Refleksjon og erkjennelse av egne styrker og svakheter",\n      "description": "Lærlingen reflekterer over sine egne styrker og svakheter, for eksempel at de har vært god til å jobbe på enkelte oppdrag men også dårlig til å sette prioriteringer og planlegge seg selv."\n    }\n  ],\n  "limitations": [\n    "Tiden til samtalen var nok, og det kunne ha vært bra med flere detaljer om hvordan lærlingen ønsker å arbeide fremover.",\n    "Veilederen hadde ikke noe skisse eller liste over mål for hva som skulle dekkas i samtalen."\n  ],\n  "summary": "Samtalen inneholdt gode eksempler på aktive veiledningsmetoder og teknikker, inkludert aktiv lytting, empatisk forståelse, åpen spørsmålsteknikk og refleksjon over egne styrker og svakheter. En tilbakemelding ville være en god idé, da det ikke var noe skisse eller liste over mål på hva som skulle dekkas i samtalen."\n}';
@@ -83,17 +85,17 @@ function App() {
   const toggleTesting = () => {
     setShowTestingSuite(!showTestingSuite);
   };
-  const [chosenScenario, setChosenScenario] = useState(standardScenario);
   const [language, setLanguage] = useState("norwegian");
-  const selectedInitialData =
-    language === "norwegian" ? standardData.norwegian : standardData.english;
+  //const selectedInitialData = language === "norwegian" ? standardData.norwegian : standardData.english;
 
-  const initialMessageLog = selectedInitialData;
-  const [messageLog, setMessageLog] = useState(initialMessageLog);
+  //const initialMessageLog = selectedInitialData;
+  const [messageLog, setMessageLog] = useState(/*initialMessageLog*/);
   const [useAudio, setUseAudio] = useState(false);
   //const [audioLog, setAudioLog] = useState(initialAudioLog);
   const [isSimRunning, setSimRunning] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [chosenScenario, setChosenScenario] = useState(/*standardScenario*/);
+  const [simState, setSimState] = useState("")
   const InfoObject = {
     language: [language, setLanguage],
     scenario: [chosenScenario, setChosenScenario],
@@ -101,6 +103,7 @@ function App() {
     feedback: [feedback, setFeedback],
     generateAudio: [useAudio, setUseAudio],
     simRunning: [isSimRunning, setSimRunning],
+    simState: [simState, setSimState]
   };
   return (
     <Context.Provider value={InfoObject}>

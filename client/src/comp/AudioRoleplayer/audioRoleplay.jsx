@@ -21,9 +21,11 @@ const AudioRecorder = (props) => {
     isRecording,
     isWaitingForServer,
     mostRecentReply,
-    sessionState,messageLog
+    sessionState,
+    messageLog,
+    setSimState,
   } = useAudioChatLogic(props);
-  
+
   const recordingAction = () => {
     switch (sessionState) {
       case "recording":
@@ -69,7 +71,10 @@ const AudioRecorder = (props) => {
             <img className="avatar" src={standardAvatar} />
           </div>
           <div id="endBtn">
-            <button>Avslutt</button>
+          <button onClick={() => {
+          setSimState("report");
+         
+        }}>Avslutt</button>
           </div>
           <div id="replyContainer" hidden={!mostRecentReply}>
             {mostRecentReply ? (

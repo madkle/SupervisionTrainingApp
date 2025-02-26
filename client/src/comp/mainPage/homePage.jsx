@@ -1,29 +1,35 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import "./homePage.css";
 import SupervisionSimulation from "../SupervisionSim/supervisionSim.jsx";
+import { Context } from "../../App.jsx";
+import TextChat from "../TextRoleplayer/OllamaChat.jsx";
+import AudioRoleplayer from "../AudioRoleplayer/audioRoleplay";
 import ReportPage from "../reportPage/reportPage";
 import WelcomePage from "../WelcomePage/welcomePage.jsx";
-import { Context } from "../../App.jsx";
 const HomePage = () => {
   const InfoObject = useContext(Context);
-  const [isSimRunning, setSimRunning] = InfoObject.simRunning;
+  const [language] = InfoObject.language;
+  const [simState] = InfoObject.simState;
+  const displaySim = (state) => {
+    let comp = <></>;
 
+    switch (state) {
+      case "textChat":
+        return <TextChat language={language} />;
+
+      case "voiceChat":
+        return <AudioRoleplayer language={language} />;
+
+      case "report":
+        return <ReportPage />;
+
+      default:
+        return <WelcomePage />;
+    }
+  };
   return (
     <div id="homeContainer">
-      {!isSimRunning && <WelcomePage />}
-      <button
-        onClick={() => {
-          setSimRunning(!isSimRunning);
-        }}
-      >
-        {isSimRunning ? "Stop" : "Start"} Text Chat
-      </button>
-      {isSimRunning && <SupervisionSimulation />}
-
-      <br />
-     
-      
-      {<ReportPage />} 
+      <section> {displaySim(simState)}</section>
     </div>
   );
 };

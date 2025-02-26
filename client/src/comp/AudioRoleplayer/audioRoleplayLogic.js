@@ -13,6 +13,7 @@ export const useAudioChatLogic = (props) => {
   const [isWaitingForServer, setIsWaitingForServer] = useState(false);
   const [mostRecentReply, setMostRecentReply] = useState("");
   const [sessionState, setSessionState] = useState("notRecording");
+  const [simState, setSimState] = InfoObject.simState;
   //audio recorders
   const mediaStream = useRef(null);
   const audioContext = useRef(null);
@@ -35,7 +36,7 @@ export const useAudioChatLogic = (props) => {
 
   const startRecording = async () => {
     setIsRecording(true);
-    setSessionState("recording")
+    setSessionState("recording");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStream.current = stream;
@@ -56,7 +57,7 @@ export const useAudioChatLogic = (props) => {
 
       mediaRecorder.current.onstop = async () => {
         setIsWaitingForServer(true);
-        setSessionState("waiting")
+        setSessionState("waiting");
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
         // Pass the Blob to the transcription function
@@ -73,7 +74,7 @@ export const useAudioChatLogic = (props) => {
       if (useAutoStop) startSilenceDetection();
     } catch (error) {
       setIsRecording(false);
-      setSessionState("notRecording")
+      setSessionState("notRecording");
       console.error("Error accessing microphone:", error);
     }
   };
@@ -108,7 +109,7 @@ export const useAudioChatLogic = (props) => {
 
         //finished with the response, updating the global log
         setIsWaitingForServer(false);
-        setSessionState("notRecording")
+        setSessionState("notRecording");
         setMessageLog(updatedLogWithAI);
 
         //clearing the transcription for later
@@ -123,7 +124,7 @@ export const useAudioChatLogic = (props) => {
     if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
       setIsRecording(false);
-      setSessionState("notRecording")
+      setSessionState("notRecording");
     }
     if (mediaStream.current) {
       mediaStream.current.getTracks().forEach((track) => track.stop());
@@ -187,6 +188,7 @@ export const useAudioChatLogic = (props) => {
     mostRecentReply,
     sessionState,
     setSessionState,
-    messageLog
+    messageLog,
+    setSimState,
   };
 };

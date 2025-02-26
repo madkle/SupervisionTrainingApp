@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useChatLogic } from "./useChatLogic";
 import "./chatBox.css";
-
+import scenarioLogic from "../scenario/scenarioLogic.js";
 const TextChat = (props) => {
   const {
     savedMessage,
@@ -12,7 +12,7 @@ const TextChat = (props) => {
     setInputMessage,
     handleSendMessage,
     handleKeyDown,
-    handlePlayAudio,
+    handlePlayAudio,setSimState,
   } = useChatLogic(props);
 
   return (
@@ -52,6 +52,11 @@ const TextChat = (props) => {
           Send
         </button>
       </div>
+      <br/>
+      <button onClick={() => {
+          setSimState("report");
+         
+        }}>Avslutt</button>
           {/*
       <div className="audio-log">
         {audioLog.map((entry, index) => (
