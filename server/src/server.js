@@ -42,7 +42,12 @@ app.post("/api/ollamaChat", async (req, res) => {
   res.json(response); // Send the entire response once it's ready
   console.log("Chat complete");
 });
-
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id;  // Accessing the variable from the URL
+  res.send(`User ID is: ${userId}`);
+  console.log(userId);
+  
+});
 app.post("/api/ollamaGenerate", async (req, res) => {
   const body = req.body;
   const chatlog = body.chatLog;
