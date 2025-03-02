@@ -5,6 +5,7 @@
     "dev": "concurrently \"cd server && nodemon server.js\" \"cd client && npm start\""
   },
   "dependencies": {
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.9"
   }
 }
