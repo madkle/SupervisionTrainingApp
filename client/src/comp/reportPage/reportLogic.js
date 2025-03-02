@@ -1,11 +1,11 @@
 export const useReportLogic = (props) => {
   const callOllamaFeedback = async (log) => {
-    const response = await fetch(`http://localhost:5000/api/ollamaGenerate`, {
+    const response = await fetch(`http://localhost:5000/ollama/report`, {// api/ollamaGenerate
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-      },
+      }, 
       body: JSON.stringify({ chatLog: log }),
     });
 
