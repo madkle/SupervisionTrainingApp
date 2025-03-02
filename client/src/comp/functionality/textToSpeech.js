@@ -1,6 +1,9 @@
+import serverIP from "./serverIP.json";
+const URL = serverIP.adress
+
 export const generateSpeech = async (input, voice) => {
   try {
-    const response = await fetch("http://localhost:5000/openai/tts", { // api/generate-speech
+    const response = await fetch(`${URL}/openai/tts`, { // api/generate-speech 
       method: "POST", 
       headers: {
         "Content-Type": "application/json",

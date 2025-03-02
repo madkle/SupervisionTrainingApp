@@ -1,10 +1,13 @@
+import serverIP from "./serverIP.json";
+const URL = serverIP.adress
+
 export const handleSpeechToText = async (audioBlob, model) => {
   try {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.webm"); // Append the audio blob with a filename
     formData.append("model", model);
-    
-    const response = await fetch("http://localhost:5000/openai/stt", { // api/transcribe
+     
+    const response = await fetch(`${URL}/openai/stt`, { // api/transcribe
       method: "POST",
       body: formData,
     });

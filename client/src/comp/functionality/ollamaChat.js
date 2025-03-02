@@ -1,3 +1,6 @@
+import serverIP from "./serverIP.json";
+const URL = serverIP.adress
+
 export const character = {
   name: "Claude",
   age: 25,
@@ -58,7 +61,7 @@ export const dynamicExampleData = {
 
 export const callChatAPI = async (message, model) => {
   
-  const response = await fetch(`http://localhost:5000/ollama/chat`, {//api/ollamaChat 
+  const response = await fetch(`${URL}/ollama/chat`, {//api/ollamaChat  
     method: "POST",
     headers: {
       "Content-Type": "application/json",

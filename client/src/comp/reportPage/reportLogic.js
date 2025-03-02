@@ -1,6 +1,8 @@
+import serverIP from "../functionality/serverIP.json";
+const URL = serverIP.adress
 export const useReportLogic = (props) => {
   const callOllamaFeedback = async (log) => {
-    const response = await fetch(`http://localhost:5000/ollama/report`, {// api/ollamaGenerate
+    const response = await fetch(`${URL}/ollama/report`, {// api/ollamaGenerate 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
