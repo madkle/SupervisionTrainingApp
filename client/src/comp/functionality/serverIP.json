@@ -1,3 +1,4 @@
 {
-    "adress":"http://10.225.148.208:5000"
+    "serverAdress":"http://10.225.148.208:5000",
+    "adress": "http://localhost:5000"
 }
