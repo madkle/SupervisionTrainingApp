@@ -1,6 +1,6 @@
-import React, { useRef, useState, useContext } from "react";
+import { useRef, useState, useContext } from "react";
 import { handleSpeechToText } from "../functionality/speechToText.js";
-import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
+import { callChatAPI } from "../functionality/ollamaChat.js";
 import { handleAudioResponse } from "../functionality/audioHanlder.js";
 
 import { Context } from "../../App.jsx";
@@ -13,7 +13,7 @@ export const useAudioChatLogic = (props) => {
   const [isWaitingForServer, setIsWaitingForServer] = useState(false);
   const [mostRecentReply, setMostRecentReply] = useState("");
   const [sessionState, setSessionState] = useState("notRecording");
-  const [simState, setSimState] = InfoObject.simState;
+  const [, setSimState] = InfoObject.simState;
   //audio recorders
   const mediaStream = useRef(null);
   const audioContext = useRef(null);
@@ -33,7 +33,6 @@ export const useAudioChatLogic = (props) => {
 
   //AUDIO
   const [audioLog, setAudioLog] = useState([]);
-
   const startRecording = async () => {
     setIsRecording(true);
     setSessionState("recording");
@@ -106,10 +105,18 @@ export const useAudioChatLogic = (props) => {
           ...audioLog,
           { url: audioURL, text: ServerMessage.content },
         ]);
+        const newAudio = new Audio();
+        newAudio.src = audioURL;
+        //setSessionState("playing");
+        newAudio.play();
+        newAudio.addEventListener("ended", () => {
+          setSessionState("notRecording");
+        });
+        //console.log(audioURL);
 
         //finished with the response, updating the global log
         setIsWaitingForServer(false);
-        setSessionState("notRecording");
+        //setSessionState("notRecording");
         setMessageLog(updatedLogWithAI);
 
         //clearing the transcription for later

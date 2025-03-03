@@ -1,25 +1,14 @@
-import React, { useRef, useState } from "react";
-import { handleSpeechToText } from "../functionality/speechToText.js";
-import { callChatAPI, exampleData } from "../functionality/ollamaChat.js";
-import { handleAudioResponse } from "../functionality/audioHanlder.js";
+import React from "react";
 import standardAvatar from "./files/avatar.png";
 import "./audioRoleplay.css";
 import { useAudioChatLogic } from "./audioRoleplayLogic.js";
 import micIcon from "./files/micIcon.svg";
-import { exampleChatLog } from "../reportPage/reportLogic.js";
 
 const AudioRecorder = (props) => {
   const {
-    setUseAutoStop,
-    setSilenceDuration,
     startRecording,
     stopRecording,
-    audioLog,
-    recordedAudios,
-    silenceDuration,
-    useAutoStop,
-    isRecording,
-    isWaitingForServer,
+
     mostRecentReply,
     sessionState,
     messageLog,
@@ -34,12 +23,15 @@ const AudioRecorder = (props) => {
       case "notRecording":
         startRecording();
         break;
+      case "playing":
+        break;
       default:
         break;
     }
   };
   const recordingButton = () => {
     let state = "";
+
     switch (sessionState) {
       case "recording":
         state = <div>Recording</div>;
@@ -47,7 +39,9 @@ const AudioRecorder = (props) => {
       case "waiting":
         state = <div className="loader"></div>;
         break;
-
+      case "playing":
+        state = <div>Stop avspilling</div>;
+        break;
       default:
         state = <img src={micIcon}></img>;
         break;
@@ -71,10 +65,13 @@ const AudioRecorder = (props) => {
             <img className="avatar" src={standardAvatar} />
           </div>
           <div id="endBtn">
-          <button onClick={() => {
-          setSimState("report");
-         
-        }}>Avslutt</button>
+            <button
+              onClick={() => {
+                setSimState("report");
+              }}
+            >
+              Avslutt
+            </button>
           </div>
           <div id="replyContainer" hidden={!mostRecentReply}>
             {mostRecentReply ? (
