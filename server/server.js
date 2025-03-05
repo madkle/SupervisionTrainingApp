@@ -16,7 +16,9 @@ app.use(express.json());
 
 app.use('/ollama', ollamaRoutes)
 app.use('/openai', openAIRoutes)
-
+app.get("/test", (req, res) => {
+  res.json({ message: "API is working!" });
+});
 
 
 // Start the server
