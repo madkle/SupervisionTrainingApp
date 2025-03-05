@@ -15,7 +15,7 @@ const WelcomePage = () => {
   const { scenarioList } = scenarioLogic();
   return (
     <div>
-      <h1>Velkommen</h1>
+      <h1>Velkommen !!!!!!!DEV!!!!!!!!</h1>
       <section id="scenarioContainer">
         {/* Scenario container */}
         {scenarioList.map((scenario, index) => {
