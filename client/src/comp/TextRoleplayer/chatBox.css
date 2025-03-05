@@ -1,12 +1,5 @@
 @import "../styleguide.css";
 
-#homeContainer {
-  padding: 1em 5em;
-  justify-self: center;
-  min-height: 90vh;
-  text-align: center;
-  width: 100%;
-}
 /* Outer Chat Container with Skewmorphism Effect */
 .ollama-chat {
   font-family: var(--font-base);

@@ -1,4 +1,15 @@
 @import "../styleguide.css";
+
+#scenarioContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  align-items: center;
+  justify-content: center;
+}
+
+
+
 /* Scenario card */
 .scenarioCard {
   min-height: 20em;
@@ -15,13 +26,9 @@
   background: var(--bg-gradient);
 }
 .twoCol{
-  display: flex;
+  display: flex; 
   flex-direction: row;
 }
-.cardSelected {
-  background: var(--bg-secondary);
-}
-/* Avatar */
 .avatarImage {
   border: var(--standard-border);
   width: 250px;
@@ -30,42 +37,33 @@
   margin: var(--spacing-0) var(--spacing-xl);
   box-shadow: var(--box-shadow);
 }
-.avatarTextContainer {
+
+.basicInfoContainer {
   margin: var(--spacing-0) var(--spacing-lg);
   display: flex;
   flex-direction: column;
 }
-.avatarTextContainer > div {
+.basicInfoContainer > div {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-#scenarioContainer {
+#scenarioDescrition{
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+  flex-direction: row;
   align-items: center;
-}
-/*language */
-.languageSelector {
-  display: flex;
-  gap: var(--spacing-lg);
-  align-items: center;
-  justify-content: center;
+  gap: var(--spacing-md);
 }
 
-#languageContainer {
+#scenarioTaskContainer{
   display: flex;
-  gap: var(--spacing-lg);;
-  justify-content: center;
+  flex-direction: row;
+  gap: var(--spacing-md);
 }
 
-.warningBox {
-  background-color: ivory;
-  border: 1px solid #000;
-  border-radius: 5px;
-  padding: 4px;
-  color: #000;
+
+.cardSelected {
+  background: var(--bg-secondary);
 }
