@@ -1,25 +1,20 @@
 import express from "express";
 import cors from "cors";
 
-import ollamaRoutes from "./routes/ollamaRoutes.js"
-import openAIRoutes from "./routes/openAI.js"
+import ollamaRoutes from "./routes/ollamaRoutes.js";
+import openAIRoutes from "./routes/openAI.js";
 const app = express();
 const port = 5000;
-
 
 // Enable CORS for all routes
 app.use(cors());
 
-
-
 app.use(express.json());
 
-app.use('/api/ollama', ollamaRoutes)
-app.use('/api/openai', openAIRoutes)
-
-
+app.use("/api/ollama", ollamaRoutes);
+app.use("/api/openai", openAIRoutes);
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
