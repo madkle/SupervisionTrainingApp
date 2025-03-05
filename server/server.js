@@ -14,8 +14,8 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use('/ollama', ollamaRoutes)
-app.use('/openai', openAIRoutes)
+app.use('/api/ollama', ollamaRoutes)
+app.use('/api/openai', openAIRoutes)
 
 
 
