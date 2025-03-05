@@ -19,7 +19,6 @@ const TextChat = (props) => {
     chosenScenario,
     isGeneratingAudio,
   } = useChatLogic(props);
-  console.log(isLoading);
 
   return (
     <div className="ollama-chat">

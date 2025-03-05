@@ -60,6 +60,9 @@ export const dynamicExampleData = {
 };
 
 export const callChatAPI = async (message, model) => {
+  console.log("----------------------------------------");
+  console.log(URL);
+  console.log("----------------------------------------");
   
   const response = await fetch(`${URL}/ollama/chat`, {//api/ollamaChat  
     method: "POST",
