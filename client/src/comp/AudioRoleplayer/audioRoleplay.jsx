@@ -2,7 +2,7 @@ import React from "react";
 import standardAvatar from "./files/avatar.png";
 import "./audioRoleplay.css";
 import { useAudioChatLogic } from "./audioRoleplayLogic.js";
-import micIcon from "./files/micIcon.svg";
+import micIcon from "../assets/micIcon.svg";
 
 const AudioRecorder = (props) => {
   const {

@@ -24,6 +24,7 @@ export const useChatLogic = (props) => {
   const [inputMessage, setInputMessage] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const audioCache = useState(new Map())[0];
 
   const AIVoice = "alloy";
@@ -73,9 +74,11 @@ export const useChatLogic = (props) => {
       const audio = new Audio(cachedAudioURL);
       audio.play();
     } else {
+      setIsGeneratingAudio(true)
       const audioURL = await handleAudioResponse(text, AIVoice);
       audioCache.set(text, audioURL);
       const audio = new Audio(audioURL);
+      setIsGeneratingAudio(false)
       audio.play();
     }
   };
@@ -92,5 +95,6 @@ export const useChatLogic = (props) => {
     handleKeyDown,
     handlePlayAudio,
     chosenScenario,
+    isGeneratingAudio,
   };
 };

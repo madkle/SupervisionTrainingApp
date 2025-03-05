@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useChatLogic } from "./useChatLogic";
 import "./chatBox.css";
 import scenarioLogic from "../scenario/scenarioLogic.js";
+import playIcon from "../assets/playSolid.svg";
+import test from "../assets/micIcon.svg";
 const TextChat = (props) => {
   const {
     savedMessage,
@@ -12,30 +14,48 @@ const TextChat = (props) => {
     setInputMessage,
     handleSendMessage,
     handleKeyDown,
-    handlePlayAudio,setSimState,chosenScenario
+    handlePlayAudio,
+    setSimState,
+    chosenScenario,
+    isGeneratingAudio,
   } = useChatLogic(props);
+  console.log(isLoading);
 
   return (
     <div className="ollama-chat">
       <h1>Ollama Chat</h1>
 
       <div className="chat-container">
-        {messageLog !== null && messageLog
-          .filter((msg) => msg.role !== "system")
-          .map((msg, index) => (
-            
-            <div key={index} className={`message ${msg.role}`}>
-              <strong>
-                {msg.role === "assistant" ? chosenScenario.name : "Deg"}:
-              </strong>{" "}
-              {msg.content}
-              {msg.role === "assistant" && (
-                <button onClick={() => handlePlayAudio(msg.content)}>
-                  Play Message
-                </button>
-              )}
-            </div> 
-          ))}
+        {messageLog !== null &&
+          messageLog
+            .filter((msg) => msg.role !== "system")
+            .map((msg, index) => (
+              <div key={index} className={`message ${msg.role}`}>
+                <p>
+                  <strong>
+                    {msg.role === "assistant" ? chosenScenario.name : "Deg"}:
+                  </strong>{" "}
+                  {msg.content}
+                </p>
+
+                {msg.role === "assistant" && (
+                  <button
+                    className="playBtn"
+                    onClick={() => handlePlayAudio(msg.content)}
+                  >
+                    {isGeneratingAudio ? (
+                      <div className="loader"></div>
+                    ) : (
+                      <img
+                        src={playIcon}
+                        alt="play Icon"
+                        className="playIcon"
+                      />
+                    )}
+                  </button>
+                )}
+              </div>
+            ))}
       </div>
 
       <div className="input-container">
@@ -53,12 +73,15 @@ const TextChat = (props) => {
           Send
         </button>
       </div>
-      <br/>
-      <button onClick={() => {
+      <br />
+      <button
+        onClick={() => {
           setSimState("report");
-         
-        }}>Avslutt</button>
-          {/*
+        }}
+      >
+        Avslutt
+      </button>
+      {/*
       <div className="audio-log">
         {audioLog.map((entry, index) => (
           <div key={index} className="audio-entry">

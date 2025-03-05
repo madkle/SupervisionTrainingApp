@@ -34,8 +34,7 @@ const ScenarioCard = ({ avatar, scenario }) => {
               {scenario.guidingQuestions.map((question, i) => {
                 return (
                   <div key={"question: " + i} className="question">
-                    <p className="boldText">{`Spørsmål ${i + 1}: `}</p>
-                    <p>{question}</p>
+                    <p>{`${i + 1}. ${question}`}</p>
                   </div>
                 );
               })}
@@ -44,6 +43,7 @@ const ScenarioCard = ({ avatar, scenario }) => {
         ) : (
           <></>
         )}
+        <br/>
         <button
           onClick={() => {
             setChosenScenario(scenario);
