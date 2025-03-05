@@ -1,5 +1,5 @@
 {
-    "adress":"https://madsmk.no",
-    "localadress": "http://localhost:5000"
+    "serveradress":"https://madsmk.no",
+    "adress": "http://localhost:5000"
 
 }
