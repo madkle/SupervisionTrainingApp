@@ -16,68 +16,23 @@ const WelcomePage = () => {
   return (
     <div>
       <h1>Velkommen</h1>
-      <section>
+      <section id="scenarioContainer">
         {/* Scenario container */}
-        <div id="scenarioContainer">
-          {scenarioList.map((scenario, index) => {
-            return (
-              <ScenarioCard
-                key={"Scenario " + (index + 1)}
-                avatar={standardAvatar}
-                scenario={scenario}
-              />
-            );
-          })}
-        </div>
+        {scenarioList.map((scenario, index) => {
+          return (
+            <ScenarioCard
+              key={"Scenario " + (index + 1)}
+              avatar={standardAvatar}
+              scenario={scenario}
+            />
+          );
+        })}
       </section>
-      <br />
-      {/* Language container
-      <section>
-        <section id="languageContainer">
-          <div className="languageSelector">
-            <p>Choose language</p>
-            <select
-              value={language}
-              onChange={(e) => {
-                setLanguage(e.target.value);
-              }}
-            >
-              <option value={"norwegian"}>Norwegian</option>
-              <option value={"english"}>English</option>
-            </select>
-          </div>
 
-          <div style={{ minWidth: "361px", minHeight: "185px" }}>
-            {language === "norwegian" && (
-              <div className="warningBox">
-                <h3>OBS!</h3>
-                <p>KI-modellen er ikke veldig god på norsk.</p>
-                <p>Rollespillet kan ha litt rar norsk dialog.</p>
-                <p>Hvis dette ikke er et problem, kan du fortsette.</p>
-              </div>
-            )}
-          </div>
-        </section>
-        <br />
-      </section>
-       */}
-      {/* selections container */}
-      <section>
-        <label>
-          <input
-            type="checkbox"
-            checked={useAudio}
-            onChange={() => {
-              setUseAudio(!useAudio);
-            }}
-          />
-          Generate Text to Speech automatically
-        </label>
-      </section>
       <br />
       <section>
         {!scenario ? (
-          <p>Velg scenario før du kan starte</p>
+          <p>Velg case før du kan starte</p>
         ) : (
           <>
             <button

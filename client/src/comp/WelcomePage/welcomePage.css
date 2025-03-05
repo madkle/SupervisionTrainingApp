@@ -8,8 +8,6 @@
   justify-content: center;
 }
 
-
-
 /* Scenario card */
 .scenarioCard {
   min-height: 20em;
@@ -25,8 +23,8 @@
   box-shadow: var(--box-shadow);
   background: var(--bg-gradient);
 }
-.twoCol{
-  display: flex; 
+.twoCol {
+  display: flex;
   flex-direction: row;
 }
 .avatarImage {
@@ -37,33 +35,41 @@
   margin: var(--spacing-0) var(--spacing-xl);
   box-shadow: var(--box-shadow);
 }
-
-.basicInfoContainer {
+#basicInfoGrid {
+  display: grid;
   margin: var(--spacing-0) var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: repeat(3, min-content);
+  gap: var(--spacing-md);
+  align-items: center;
+  text-align: left;
 }
-.basicInfoContainer > div {
+#scenarioDescrition {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-md);
+  text-align: left;
 }
 
-#scenarioDescrition{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--spacing-md);
+#scenarioTaskContainer {
 }
-
-#scenarioTaskContainer{
+#questionContainer{
+  
   display: flex;
   flex-direction: row;
   gap: var(--spacing-md);
+
+}
+.question {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xs);
 }
 
-
+.question {
+  color:aqua
+}
 .cardSelected {
   background: var(--bg-secondary);
 }

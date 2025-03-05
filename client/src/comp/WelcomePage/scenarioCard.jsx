@@ -3,8 +3,9 @@ import { Context } from "../../App.jsx";
 const ScenarioCard = ({ avatar, scenario }) => {
   const InfoObject = useContext(Context);
   const [chosenScenario, setChosenScenario] = InfoObject.scenario;
-  const isCardSelected = chosenScenario && chosenScenario.name === scenario.name;
-  
+  const isCardSelected =
+    chosenScenario && chosenScenario.name === scenario.name;
+
   return (
     <>
       <div
@@ -14,29 +15,41 @@ const ScenarioCard = ({ avatar, scenario }) => {
       >
         <div className="twoCol">
           <img src={avatar} className="avatarImage" alt="avatar image"></img>
-
-          <div className=" avatarTextContainer">
-            <div className="avatarTextRow ">
-              <h2 className="">Navn: </h2>
-              <p className="">{scenario.name || "No Data"}</p>
-            </div>
-            <div className="avatarTextRow">
-              <h2>Personlighet</h2> <p>{scenario.personality || "No Data"}</p>
-            </div>
-            <div className="avatarTextRow">
-              <h2>Alder</h2> <p>{scenario.age || "No Data"}</p>
-            </div>
+          <div id="basicInfoGrid">
+            <h2>Navn:</h2>
+            <p>{scenario.name || "No Data"}</p>
+            <h2>Personlighet:</h2>
+            <p>{scenario.personality || "No Data"}</p>
+            <h2>Alder:</h2>
+            <p>{scenario.age || "No Data"}</p>
           </div>
         </div>
-        <div className="avatarTextRow">
+        <div id="scenarioDescrition">
           <h2>Beskrivelse</h2> <p>{scenario.description || "No Data"}</p>
         </div>
+        {scenario.guidingQuestions.length !== 0 ? (
+          <div id="scenarioTaskContainer">
+            <h2>Veiledende spørsmål:</h2>
+            <div id="questionContainer">
+              {scenario.guidingQuestions.map((question, i) => {
+                return (
+                  <div key={"question: " + i} className="question">
+                    <p className="boldText">{`Spørsmål ${i + 1}: `}</p>
+                    <p>{question}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
         <button
           onClick={() => {
             setChosenScenario(scenario);
           }}
         >
-          {!chosenScenario && isCardSelected ? "Senario Valgt" : "Velg Senario"}
+          {!chosenScenario && isCardSelected ? "Case valgt" : "Velg case"}
         </button>
       </div>
     </>
