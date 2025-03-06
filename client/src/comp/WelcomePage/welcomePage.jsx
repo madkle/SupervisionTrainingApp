@@ -30,7 +30,7 @@ const WelcomePage = () => {
       </section>
 
       <br />
-      <section>
+      <section id="buttonContainer">
         {!scenario ? (
           <p>Velg case før du kan starte</p>
         ) : (
@@ -44,7 +44,7 @@ const WelcomePage = () => {
               }}
               disabled={!scenario}
             >
-              Start Text Chat
+              Start tekst samtale
             </button>
             <button
               onClick={() => {
@@ -55,7 +55,7 @@ const WelcomePage = () => {
               }}
               disabled={!scenario}
             >
-              Start Voice Chat
+              Start stemme samtale
             </button>
           </>
         )}

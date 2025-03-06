@@ -69,3 +69,17 @@
 .cardSelected {
   background: var(--bg-secondary);
 }
+
+#buttonContainer{
+  display: flex;
+  gap: var(--spacing-3xl);
+  align-items: center;
+  justify-content: center;
+  margin-bottom:  var(--spacing-3xl);
+}
+
+#buttonContainer > button{
+  min-width: 8em;
+  min-height: 3em;
+  font-size: var(--spacing-lg);
+}

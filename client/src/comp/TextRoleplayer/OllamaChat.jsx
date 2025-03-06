@@ -22,7 +22,7 @@ const TextChat = (props) => {
 
   return (
     <div className="ollama-chat">
-      <h1>Ollama Chat</h1>
+      <h1>Samtale med {chosenScenario.name}</h1>
 
       <div className="chat-container">
         {messageLog !== null &&

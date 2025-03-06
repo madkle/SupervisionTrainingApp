@@ -22,14 +22,14 @@ const ReportPage = (props) => {
   );
   const [pdfSection, setPdfSection] = useState(<></>);
   const { callOllamaFeedback } = useReportLogic(props);
-
+  const [generatingPDF, setGeneratingPDF] = useState(false);
   const getFeedback = async () => {
-    
+    setGeneratingPDF(true)
     const feedbackPromise = await callOllamaFeedback(messageLog);
     const response = feedbackPromise.response;
     setFeedbackModule(<Evaluation response={response} />);
     setFeedback(response);
-    
+    setGeneratingPDF(false)
     setPdfSection(
       <PDFViewer id="pdfViewer">
         <ReportPDF
@@ -69,6 +69,10 @@ const ReportPage = (props) => {
       <section>
       <TestReport/>
       </section>*/}
+      <section style={{width:"100%", display:"flex", justifyContent:"center", alignItems:"center", margin:"2em 0"}}>
+      <div className="loader" hidden={!generatingPDF} style={{width:"150px"}}></div>
+
+      </section>
       <br/>
       <button onClick={() => {
           setSimState("");
