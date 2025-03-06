@@ -7,18 +7,25 @@ const app = express();
 const port = 5000;
 
 // Enable CORS for all routes
-app.use(cors(/*{
+app.use(
+  cors({
   origin: ["https://madsmk.no", "https://www.madsmk.no"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true
-}*/));
-
+})
+);
 
 app.use(express.json());
 
 app.use("/api/ollama", ollamaRoutes);
 app.use("/api/openai", openAIRoutes);
+
+router.get("/", (req, res) => {
+  console.log("API");
+  
+  res.json({ message: "API is working!" });
+});
 
 // Start the server
 app.listen(port, "0.0.0.0", () => {
