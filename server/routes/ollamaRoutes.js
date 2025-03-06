@@ -3,9 +3,32 @@ import ollama from "ollama";
 const router = express.Router();
 
 // define the home page route
+router.get("/test", async (req,res) => {
+  /*
+  curl http://localhost:11434/api/generate -d '{
+    "model": "llama3.2",
+    "prompt": "Why is the sky blue?"
+  }'
+  */
+ 
+  const body = req.body;
+  const message = "Why is the sky blue?"
+  const model = "llama3.2"
+  const response = await ollama.generate({
+    model: model,
+    message
+  });
+
+  console.log(response);
+  
+  res.json(response); // Send the entire response once it's ready
+  console.log("Chat complete");
+})
 router.post('/chat', async (req, res) => {
     const body = req.body;
-
+    console.log("body");
+    console.log(body);
+    
   console.log("Starting Ollama chat");
 
   const response = await ollama.chat({
@@ -13,7 +36,10 @@ router.post('/chat', async (req, res) => {
     messages: body.messageLog,
     stream: false, // Set stream to false to avoid streaming
   });
-
+  console.log("Server response");
+  console.log(response);
+  
+  
   res.setHeader("Content-Type", "application/json");
   res.json(response); // Send the entire response once it's ready
   console.log("Chat complete");

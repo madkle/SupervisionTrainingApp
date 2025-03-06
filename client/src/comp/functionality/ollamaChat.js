@@ -60,11 +60,21 @@ export const dynamicExampleData = {
 };
 
 export const callChatAPI = async (message, model) => {
-  console.log("----------------------------------------");
-  console.log(URL);
-  console.log("----------------------------------------");
   
-  const response = await fetch(`${URL}/ollama/chat`, {//api/ollamaChat  
+  console.log("URL");
+  console.log(URL);
+  
+  const fullURL = `${URL}/ollama/chat`;
+  console.log("fullURL");
+  console.log(fullURL);
+  
+  console.log("message");
+  console.log(message);
+  
+  console.log("model");
+  console.log(model);
+  
+  const response = await fetch(fullURL, {//api/ollamaChat  
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -79,6 +89,8 @@ export const callChatAPI = async (message, model) => {
 
   
   const data = await response.json(); // Process the entire response once received
-
+  console.log("data:");
+  console.log(data);
+  
   return data;
 };
