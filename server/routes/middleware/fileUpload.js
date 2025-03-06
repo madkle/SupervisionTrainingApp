@@ -13,8 +13,9 @@ const __dirname = path.dirname(__filename);
 // Ensure the downloads directory exists
 const DOWNLOADS_DIR = path.join(__dirname, "downloads");
 if (!fs.existsSync(DOWNLOADS_DIR)) {
-  fs.mkdirSync(DOWNLOADS_DIR);
+  fs.mkdirSync(DOWNLOADS_DIR, { recursive: true, mode: 0o777 });
 }
+
 
 // Multer configuration for saving uploaded files
 const storage = multer.diskStorage({

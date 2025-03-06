@@ -29,14 +29,6 @@ const ReportPage = (props) => {
     const response = feedbackPromise.response;
     setFeedbackModule(<Evaluation response={response} />);
     setFeedback(response);
-    console.log("feedback:");
-    
-    console.log(feedback);
-    
-    console.log("response");
-    console.log(response);
-    console.log("messageLog");
-    console.log(messageLog);
     
     setPdfSection(
       <PDFViewer id="pdfViewer">

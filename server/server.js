@@ -18,14 +18,9 @@ app.use(
 
 app.use(express.json());
 
-app.use("/api/ollama", ollamaRoutes);
-app.use("/api/openai", openAIRoutes);
+app.use("/ollama", ollamaRoutes);
+app.use("/openai", openAIRoutes);
 
-router.get("/", (req, res) => {
-  console.log("API");
-  
-  res.json({ message: "API is working!" });
-});
 
 // Start the server
 app.listen(port, "0.0.0.0", () => {

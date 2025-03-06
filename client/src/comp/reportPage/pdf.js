@@ -92,7 +92,6 @@ const FeedbackSection = ({ feedback }) => {
 };
 // Create Document Component
 const ReportPDF = ({ feedback, chatLog }) => {
-  console.log(chatLog);
   
   return (
     <Document>
