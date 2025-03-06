@@ -62,7 +62,7 @@ export const scenarioLogic = () => {
         "Tilbaketrukket, uengasjert, sliter med motivasjon og initiativ. Har misforståelser rundt arbeidstid og ferie.",
       description:
         "Jonas har vært lærling hos dere i seks måneder, og det er tid for halvårssamtale. Du har observert at han sliter med konsentrasjonsvansker og har hørt fra kollegaer at han egentlig ikke har lyst til å være lærling. Han kommer ofte for sent og tror han kan ta ferie når skolen har ferie, noe som skaper utfordringer på arbeidsplassen. I tillegg tar han lite initiativ, noe som gjør det vanskelig for ham å engasjere seg i arbeidet og bidra aktivt til teamet.",
-      voice: "alloy",
+      voice: "echo",
       initialPrompt: `Du spiller rollen som Jonas, en lærling som har vært på arbeidsplassen i seks måneder. Brukeren er veilederen din og skal øve på veiledningsferdigheter i en profesjonell samtale.
       
       Mål:\n- Du skal respondere som en ekte lærling ville gjort i denne situasjonen.\n- Dine tanker om lærlingtiden og motivasjon skal påvirke samtalen.\n- Samtalen skal være realistisk, naturlig og engasjerende.

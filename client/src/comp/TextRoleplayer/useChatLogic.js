@@ -69,13 +69,14 @@ export const useChatLogic = (props) => {
   };
 
   const handlePlayAudio = async (text) => {
+    
     if (audioCache.has(text)) {
       const cachedAudioURL = audioCache.get(text);
       const audio = new Audio(cachedAudioURL);
       audio.play();
     } else {
       setIsGeneratingAudio(true)
-      const audioURL = await handleAudioResponse(text, AIVoice);
+      const audioURL = await handleAudioResponse(text, chosenScenario.voice);
       audioCache.set(text, audioURL);
       const audio = new Audio(audioURL);
       setIsGeneratingAudio(false)
