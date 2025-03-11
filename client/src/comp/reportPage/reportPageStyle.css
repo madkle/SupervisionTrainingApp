@@ -8,39 +8,23 @@
   padding: var(--spacing-2xl);
   box-shadow: var(--box-shadow);
 }
-/*
-#transcript-container {
+#loaderContainer{
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  margin: 2em 0;
 }
-.chatLine {
-  color: azure;
-  display: flex;
-  gap: 8px;
-  border-bottom: #838383 1px dotted;
+#loaderContainer > div{
+width: 150px
 }
-.user {
-}
-.assistant {
-  justify-content: right;
-}
-.chatBubble {
-  display: flex;
-  gap: 6px;
-  background-color: blue;
-  width: fit-content;
-  padding: 4px 14px;
-  border-radius: 8px 8px 0 8px;
-  max-width: 80%;
-  padding: 14px 8px;
-  
-}
-  */
 #pdfViewer{
   width: 100%;
   height: 70vh;
   border: var(--standard-border);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+}
+#downoladPDF{
+  color: var(--color-white);
 }

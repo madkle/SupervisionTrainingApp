@@ -1,7 +1,8 @@
 @import "../styleguide.css";
 
 #audioContainer {
-  height: 90vh;
+  height: 70vh;
+  width: 100%;
   background-color: var(--color-dark-purple);
   display: flex;
   flex-direction: row;
@@ -79,12 +80,22 @@
 }
 /* last reply box */
 #replyContainer {
-  background-color: var(--color-transparent-purple);
   grid-area: 2/3/4/4;
+}
+.popupBox{
+  background-color: var(--color-transparent-purple);
+  
   border: var(--standard-border);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg) var(--spacing-sm);
+  overflow: auto;
+  max-height: 35em;
+  text-align: left;
+}
+#errorContainer{
+  background-color: var(--color-transparent-purple);
+  grid-area: 2/1/4/2;
 }
 /* transcript */
 #transcript {
@@ -99,6 +110,24 @@
 .transcriptLine{
   text-align: left;
 
+}
+
+#scenarioInfoCard{
+  width: 100%;
+  min-height: 10em;
+  background-color: var(--color-gray);
+  border: var(--standard-border);
+  border-top: none;
+  padding-top: var(--spacing-lg);
+  
+}
+
+#scenarioInfoCard > div{
+  padding: var(--spacing-lg);
+}
+
+#scenarioDesc{
+  text-align: left;
 }
 /* if the screen is not big */
 @media screen and (max-width: 1200px) {

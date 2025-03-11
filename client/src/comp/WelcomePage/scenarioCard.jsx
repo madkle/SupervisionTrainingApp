@@ -49,7 +49,7 @@ const ScenarioCard = ({ avatar, scenario }) => {
             setChosenScenario(scenario);
           }}
         >
-          {!chosenScenario && isCardSelected ? "Case valgt" : "Velg case"}
+          { isCardSelected ? "Case valgt" : "Velg case"}
         </button>
       </div>
     </>

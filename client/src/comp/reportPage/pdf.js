@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   text: {
     margin: 12,
     fontSize: 14,
-    textAlign: "justify",
+    textAlign: "left",
   },
   title: {
     fontSize: 24,
@@ -74,17 +74,37 @@ const FeedbackSection = ({ feedback }) => {
       data = JSON.parse(feedback);
     }
   }
-
+  const techniquesList = () => {
+    const list = data.techniques.map((item, index) => {
+      return (
+        <View key={"technique" + index}>
+          <Text style={styles.text}>{item.name}:</Text>
+          <Text style={styles.text}>{item.description}</Text>
+        </View>
+      );
+    });
+    return list;
+  };
+  const limitationList = () => {
+    const list = data.limitations.map((item, index) => {
+      return (
+        <View key={"limitation" + index}>
+          <Text style={styles.text}>{item}</Text>
+        </View>
+      );
+    });
+    return list;
+  };
   return (
     <View style={styles.section}>
       <Text style={styles.title}>Veiledningssamtale med lærling</Text>
       <Text style={styles.text}>{data.introduction}</Text>
       <Text style={styles.subtitle}>Inkluderte teknikker:</Text>
-      <Text style={styles.text}>{data.techniques[0].description}</Text>
+      {techniquesList()}
       <Text style={styles.subtitle}>
         Begrensninger og utviklingsmuligheter:
       </Text>
-      <Text style={styles.text}>{data.limitations[0]}</Text>
+      {limitationList()}
       <Text style={styles.subtitle}>Sammendrag:</Text>
       <Text style={styles.text}>{data.summary}</Text>
     </View>
@@ -92,7 +112,6 @@ const FeedbackSection = ({ feedback }) => {
 };
 // Create Document Component
 const ReportPDF = ({ feedback, chatLog }) => {
-  
   return (
     <Document>
       <Page size="A4" style={styles.page}>

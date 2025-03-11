@@ -1,83 +1,87 @@
-import React, { useState, useContext } from "react";
-import { PDFViewer } from "@react-pdf/renderer";
-import {
-  useReportLogic,
-  exampleEvaluation,
-  exampleChatLog,
-} from "./reportLogic";
-import Evaluation from "./evaluation.jsx";
-import Transcription from "./transcription.jsx";
-import TestReport from "./test.jsx";
-import "./reportPageStyle.css";
+import React, { useState, useContext, useMemo } from "react";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { useReportLogic, exampleEvaluation, exampleChatLog } from "./reportLogic";
 import ReportPDF from "./pdf.js";
 import { Context } from "../../App.jsx";
+import "./reportPageStyle.css";
+
 const ReportPage = (props) => {
   const InfoObject = useContext(Context);
   const [messageLog] = InfoObject.chatlog;
-  const [feedback, setFeedback] = InfoObject.feedback;
-  const [simState, setSimState] = InfoObject.simState;
+  const [, setSimState] = InfoObject.simState;
+  const [chosenScenario] = InfoObject.scenario;
 
-  const [feedbackModule, setFeedbackModule] = useState(
-    <Evaluation response={feedback === "" ? exampleEvaluation : feedback} />
-  );
-  const [pdfSection, setPdfSection] = useState(<></>);
-  const { callOllamaFeedback } = useReportLogic(props);
+  const [pdfData, setPdfData] = useState(null);
   const [generatingPDF, setGeneratingPDF] = useState(false);
+  const [pdfError, setPdfError] = useState(null); // Ny state for feil
+
+  const { callOllamaFeedback } = useReportLogic(props);
+
   const getFeedback = async () => {
-    setGeneratingPDF(true)
-    const feedbackPromise = await callOllamaFeedback(messageLog);
-    const response = feedbackPromise.response;
-    setFeedbackModule(<Evaluation response={response} />);
-    setFeedback(response);
-    setGeneratingPDF(false)
-    setPdfSection(
-      <PDFViewer id="pdfViewer">
-        <ReportPDF
-          feedback={response === "" ? exampleEvaluation : response}
-          chatLog={
-            !messageLog || messageLog.lenght === 1 ? exampleChatLog : messageLog
-          }
-        />
-      </PDFViewer>
-    );
+    setGeneratingPDF(true);
+    setPdfError(null); // Nullstill feilen ved ny generering
+
+    try {
+      const feedbackPromise = await callOllamaFeedback(messageLog);
+      const response = feedbackPromise.response;
+      setGeneratingPDF(false);
+
+      setPdfData({
+        feedback: response === "" ? exampleEvaluation : response,
+        chatLog: !messageLog || messageLog.length === 1 ? exampleChatLog : messageLog,
+      });
+    } catch (error) {
+      setGeneratingPDF(false);
+      setPdfError("Kunne ikke generere PDF. Prøv igjen.");
+      console.error("Feil under generering av PDF:", error);
+    }
   };
+
+  // Memoiser PDF-dokumentet for å unngå re-renders
+  const pdfDocument = useMemo(() => {
+    if (!pdfData || !pdfData.chatLog || !pdfData.feedback) return null;
+    try {
+      return <ReportPDF feedback={pdfData.feedback} chatLog={pdfData.chatLog} />;
+    } catch (error) {
+      setPdfError("Feil ved rendering av PDF.");
+      console.error("PDF render error:", error);
+      return null;
+    }
+  }, [pdfData]);
 
   return (
     <div className="report-box">
-      <h1>Report</h1>
-    {/*  
-      <section>
-        <h2>Transcript</h2>
-        <Transcription
-          response={
-            messageLog || messageLog.lenght === 1 ? exampleChatLog : messageLog
-          }
-        />
-      </section>
-      <section>
-        <h2>Audio Recording</h2>
-      </section>
-      <section>
-        <h2>Feedback</h2>
-       
-        {feedbackModule}
-      </section>
-*/}
- <button onClick={getFeedback}>Generer tilbakemelding</button>
-      <section>{pdfSection}</section>
-      {/*
-      <section>
-      <TestReport/>
-      </section>*/}
-      <section style={{width:"100%", display:"flex", justifyContent:"center", alignItems:"center", margin:"2em 0"}}>
-      <div className="loader" hidden={!generatingPDF} style={{width:"150px"}}></div>
+      <h1>Rapport</h1>
+      <button onClick={getFeedback} disabled={generatingPDF} hidden={pdfDocument}>
+        {generatingPDF ? "Genererer..." : "Generer tilbakemelding"}
+      </button>
 
-      </section>
-      <br/>
-      <button onClick={() => {
-          setSimState("");
-         
-        }}>Tilbake Hjem</button>
+      {pdfError ? (
+        <p className="error-message">{pdfError}</p>
+      ) : pdfDocument ? (
+        <>
+          <PDFViewer id="pdfViewer" style={{ width: "100%", height: "500px" }}>
+            {pdfDocument}
+          </PDFViewer>
+
+          <PDFDownloadLink
+            fileName={`Rapport_samtale_med_${chosenScenario?.name}_${new Date().toLocaleDateString()}.pdf`}
+            document={pdfDocument}
+          >
+            {({ loading }) => (
+              <button id="downloadPDF">
+                {loading ? "Genererer dokument..." : "Last ned PDF"}
+              </button>
+            )}
+          </PDFDownloadLink>
+        </>
+      ) : (
+        <p>Ingen PDF generert ennå.</p>
+      )}
+
+      <br />
+      <br />
+      <button onClick={() => setSimState("")}>Tilbake Hjem</button>
     </div>
   );
 };

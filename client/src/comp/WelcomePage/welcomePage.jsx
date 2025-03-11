@@ -16,20 +16,6 @@ const WelcomePage = () => {
   return (
     <div>
       <h1>Velkommen</h1>
-      <section id="scenarioContainer">
-        {/* Scenario container */}
-        {scenarioList.map((scenario, index) => {
-          return (
-            <ScenarioCard
-              key={"Scenario " + (index + 1)}
-              avatar={standardAvatar}
-              scenario={scenario}
-            />
-          );
-        })}
-      </section>
-
-      <br />
       <section id="buttonContainer">
         {!scenario ? (
           <p>Velg case før du kan starte</p>
@@ -60,6 +46,20 @@ const WelcomePage = () => {
           </>
         )}
       </section>
+      <section id="scenarioContainer">
+        {/* Scenario container */}
+        {scenarioList.map((scenario, index) => {
+          return (
+            <ScenarioCard
+              key={"Scenario " + (index + 1)}
+              avatar={standardAvatar}
+              scenario={scenario}
+            />
+          );
+        })}
+      </section>
+
+      <br />
     </div>
   );
 };

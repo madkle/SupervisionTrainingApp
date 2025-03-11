@@ -106,3 +106,22 @@ button:disabled {
 .endBox > p {
   margin: 0;
 }
+
+#scenarioInfoCardChat{
+  width: 100%;
+  min-height: 10em;
+  background: var(--bg-gradient);
+  border: var(--standard-border);
+  border-top: none;
+  padding-top: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+#scenarioInfoCardChat > div{
+  padding: var(--spacing-lg);
+}
+
+#scenarioDesc{
+  text-align: left;
+}

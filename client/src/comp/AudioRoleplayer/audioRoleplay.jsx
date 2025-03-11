@@ -8,11 +8,12 @@ const AudioRecorder = (props) => {
   const {
     startRecording,
     stopRecording,
-
     mostRecentReply,
     sessionState,
     messageLog,
     setSimState,
+    chosenScenario,
+    errorMessage
   } = useAudioChatLogic(props);
 
   const recordingAction = () => {
@@ -34,7 +35,7 @@ const AudioRecorder = (props) => {
 
     switch (sessionState) {
       case "recording":
-        state = <div>Recording</div>;
+        state = <div>Tar opp lyd. Klikk for å stoppe</div>;
         break;
       case "waiting":
         state = <div className="loader"></div>;
@@ -73,11 +74,21 @@ const AudioRecorder = (props) => {
               Avslutt
             </button>
           </div>
-          <div id="replyContainer" hidden={!mostRecentReply}>
+          <div id="replyContainer" className="popupBox"  hidden={!mostRecentReply}>
             {mostRecentReply ? (
               <>
                 <h1>Lærling:</h1>
                 <p>{mostRecentReply}</p>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="errorContainer" className="popupBox" hidden={!errorMessage}>
+            {errorMessage ? (
+              <>
+                <h1>Det skjedde en feil!</h1>
+                <p>{errorMessage}</p>
               </>
             ) : (
               <></>
@@ -101,9 +112,34 @@ const AudioRecorder = (props) => {
           })}
         </div>
       </section>
+      <br />
+      <section id="scenarioInfoCard">
+        <h2>Samtale med {chosenScenario.name}</h2>
+        <div>
+            <h2>Beskrivelse</h2>
+            <p id="scenarioDesc">{chosenScenario.description}</p>
+        </div>
+        {chosenScenario.guidingQuestions.length !== 0 ? (
+          <div>
+            <h2>Veiledende spørsmål:</h2>
+            <div id="questionContainer">
+              {chosenScenario.guidingQuestions.map((question, i) => {
+                return (
+                  <div key={"question: " + i} className="question">
+                    <p>{`${i + 1}. ${question}`}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+      </section>
     </>
   );
 };
+
 export default AudioRecorder;
 /*
       <section id="audioContainer">
