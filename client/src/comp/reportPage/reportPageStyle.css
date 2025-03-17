@@ -28,3 +28,41 @@ width: 150px
 #downoladPDF{
   color: var(--color-white);
 }
+#transcript-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  /*border: black 1px solid;*/
+}
+.chatLine {
+  /*border: black 1px solid;*/
+  color: var(--color-white);
+  display: flex;
+  gap: 8px;
+}
+.user {
+  justify-content: right;
+}
+.assistant {
+  justify-content: left;
+}
+.user > .chatBubble {
+  border-radius: 12px 12px 0 12px;
+}
+.assistant > .chatBubble {
+  border-radius: 12px 12px 12px 0;
+}
+.chatBubble {
+  display: flex;
+  gap: 6px;
+  background: var(--color-light-purple);
+  width: fit-content;
+  padding: 4px 14px;
+  max-width: 80%;
+  padding: 14px 8px;
+  /*
+    bottom left: border-radius: 8px 8px 8px 0;
+    bottom right: border-radius: 8px 8px 0 8px;
+  */
+}

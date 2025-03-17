@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-import { Context } from "../../App";
 //disable hyponation
 Font.registerHyphenationCallback((word) => [word]);
 // Create styles
@@ -65,6 +64,7 @@ const Transcription = ({ chatLog }) => {
     </View>
   );
 };
+
 const FeedbackSection = ({ feedback }) => {
   let data = "";
   if (feedback !== "") {
@@ -111,7 +111,7 @@ const FeedbackSection = ({ feedback }) => {
   );
 };
 // Create Document Component
-const ReportPDF = ({ feedback, chatLog }) => {
+const ReportPDF = ({ /*feedback,*/ chatLog }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -119,9 +119,11 @@ const ReportPDF = ({ feedback, chatLog }) => {
           <Transcription chatLog={chatLog} />
         </View>
       </Page>
+      {/* 
       <Page size="A4" style={styles.page}>
         <FeedbackSection feedback={feedback} />
       </Page>
+      */}
     </Document>
   );
 };
