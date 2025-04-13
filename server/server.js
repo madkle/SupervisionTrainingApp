@@ -8,12 +8,12 @@ const port = 5000;
 
 // Enable CORS for all routes
 app.use(
-  cors({
+  cors(/*{
   origin: ["https://madsmk.no", "https://www.madsmk.no"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true
-})
+}*/)
 );
 
 app.use(express.json());

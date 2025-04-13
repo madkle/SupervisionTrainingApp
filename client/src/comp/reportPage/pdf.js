@@ -32,6 +32,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     margin: 12,
   },
+  italic: {
+    fontSize: 14,
+    fontStyle: "italic",
+    marginLeft: "8px",
+  },
 });
 const transcriptStyle = StyleSheet.create({
   transcriptContainer: {
@@ -66,29 +71,36 @@ const Transcription = ({ chatLog }) => {
 };
 
 const FeedbackSection = ({ feedback }) => {
-  let data = "";
-  if (feedback !== "") {
-    if (feedback.constructor === {}.constructor) {
-      data = feedback;
-    } else {
-      data = JSON.parse(feedback);
-    }
-  }
+  const data = feedback;
+  if (!data) return null;
   const techniquesList = () => {
-    const list = data.techniques.map((item, index) => {
+    const list = data.brukteMetoder.map((item, index) => {
       return (
-        <View key={"technique" + index}>
-          <Text style={styles.text}>{item.name}:</Text>
-          <Text style={styles.text}>{item.description}</Text>
+        <View key={"metode" + index}>
+          <Text style={styles.text}>{item.metode}:</Text>
+          <Text style={[styles.text, styles.italic]}>
+            Eksempel: {item.eksempel}
+          </Text>
+          <Text style={styles.text}>{item.vurdering}</Text>
         </View>
       );
     });
     return list;
   };
-  const limitationList = () => {
-    const list = data.limitations.map((item, index) => {
+  const styrkerListe = () => {
+    const list = data.styrker.map((item, index) => {
       return (
-        <View key={"limitation" + index}>
+        <View key={"styrke" + index}>
+          <Text style={styles.text}>{item}</Text>
+        </View>
+      );
+    });
+    return list;
+  };
+  const forbedringerListe = () => {
+    const list = data.forbedringer.map((item, index) => {
+      return (
+        <View key={"forbedring" + index}>
           <Text style={styles.text}>{item}</Text>
         </View>
       );
@@ -98,20 +110,19 @@ const FeedbackSection = ({ feedback }) => {
   return (
     <View style={styles.section}>
       <Text style={styles.title}>Veiledningssamtale med lærling</Text>
-      <Text style={styles.text}>{data.introduction}</Text>
-      <Text style={styles.subtitle}>Inkluderte teknikker:</Text>
+      <Text style={styles.text}>{data.oppsummering}</Text>
+      <Text style={styles.subtitle}>Brukte metoder:</Text>
       {techniquesList()}
-      <Text style={styles.subtitle}>
-        Begrensninger og utviklingsmuligheter:
-      </Text>
-      {limitationList()}
-      <Text style={styles.subtitle}>Sammendrag:</Text>
-      <Text style={styles.text}>{data.summary}</Text>
+      <Text style={styles.subtitle}>Styrker:</Text>
+      {styrkerListe()}
+      <Text style={styles.subtitle}>Forbedringer:</Text>
+      {forbedringerListe()}
     </View>
   );
 };
 // Create Document Component
-const ReportPDF = ({ /*feedback,*/ chatLog }) => {
+const ReportPDF = ({ feedback, chatLog }) => {
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -119,11 +130,11 @@ const ReportPDF = ({ /*feedback,*/ chatLog }) => {
           <Transcription chatLog={chatLog} />
         </View>
       </Page>
-      {/* 
-      <Page size="A4" style={styles.page}>
-        <FeedbackSection feedback={feedback} />
-      </Page>
-      */}
+      {feedback && (
+        <Page size="A4" style={styles.page}>
+          <FeedbackSection feedback={feedback} />
+        </Page>
+      )}
     </Document>
   );
 };

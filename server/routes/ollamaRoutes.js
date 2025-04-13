@@ -14,6 +14,32 @@ router.get("/test", async (req,res) => {
   res.json(response); // Send the entire response once it's ready
   console.log("Chat complete");
 })
+
+router.post("/generate", async (req,res)=>{
+  const body = req.body;
+  const model = body.model;
+ 
+  const conversation = body.transcript
+  const prompt = body.prompt
+  
+  try {
+    
+    const output = await ollama.generate({
+      model: model,
+      prompt,
+      stream: false, 
+      format: "json",
+      temperature: 0.2 
+    });
+    
+    
+    res.status(200).send({ content: output });
+    
+  } catch (error) {
+    console.error("Error with Ollama:", error);
+    res.status(500).send("Error generating response." + error);
+  }
+})
 router.post('/chat', async (req, res) => {
     const body = req.body;
     
@@ -70,8 +96,10 @@ router.post('/report', async (req, res) => {
   "summary": ""
 }`;
     let prompt = `${characteristics} ${instruction} ${parameters} ${format} The conversation:${transcript}`;
+    console.log(prompt);
+    
     const output = await ollama.generate({
-      model: "llama3.1",
+      model: "llama3.2",
       prompt,
       stream: false,
       format: "json",
