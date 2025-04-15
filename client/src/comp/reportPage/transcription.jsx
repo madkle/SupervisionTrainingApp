@@ -1,4 +1,3 @@
-import React from "react";
 const Transcription = ({ response }) => {
   return (
     <div id="transcript-container">

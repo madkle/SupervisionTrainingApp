@@ -13,34 +13,32 @@ const openai = new OpenAI({
 // define the home page route
 router.post("/gen", async (req, res) => {
   const { samtalelogg } = req.body;
-  
+
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // eller gpt-3.5-turbo hvis du vil spare penger 
+      model: "gpt-4o-mini", // eller gpt-3.5-turbo hvis du vil spare penger
       temperature: 0.2,
-      //response_format: "json", // 🔥 Dette sikrer parsbar output
       messages: [
         {
           role: "system",
           content: `
-Du er en ekspert på veiledning. Du skal analysere en veiledningssamtale mellom en student (veileder) og en lærling.
+            Du er en ekspert på veiledning. Du skal analysere en veiledningssamtale mellom en student (veileder) og en lærling.
 
-Du skal returnere følgende JSON-struktur:
-{
-  "brukteMetoder": [
-    {
-      "metode": "string",
-      "eksempel": "string",
-      "vurdering": "string"
-    }
-  ],
-  "styrker": ["string", "..."],
-  "forbedringer": ["string", "..."],
-  "videreutvikling": ["string", "..."],
-  "oppsummering": "string"
-}
-
-Svar kun i gyldig JSON, ikke noe String svar.
+            Du skal returnere følgende JSON-struktur:
+            {
+              "brukteMetoder": [
+                {
+                  "metode": "string",
+                  "eksempel": "string",
+                  "vurdering": "string"
+                }
+              ],
+              "styrker": ["string", "..."],
+              "forbedringer": ["string", "..."],
+              "videreutvikling": ["string", "..."],
+              "oppsummering": "string"
+            }
+            Svar kun i gyldig JSON, ikke noe String svar.
           `.trim(),
         },
         {
@@ -49,11 +47,11 @@ Svar kun i gyldig JSON, ikke noe String svar.
         },
       ],
     });
-    
+
     const jsonString = completion.choices[0]?.message?.content;
 
     const feedback = JSON.parse(jsonString);
-    
+
     res.send(feedback);
     console.log("Feedback generation successful!");
   } catch (err) {

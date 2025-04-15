@@ -1,16 +1,5 @@
 import React from "react";
 const FeedbackDisplay = ({ response, scenario }) => {
-  /*
-  let data = "";
-  if (response !== "") {
-    if (response.constructor === ({}).constructor) {
-      data = response
-    }else {
-      data = JSON.parse(response);
-    }
-    
-  }
-*/
   let data = "";
   if (response.constructor === "".constructor) {
     data = JSON.parse(response);
@@ -19,8 +8,6 @@ const FeedbackDisplay = ({ response, scenario }) => {
   } else {
     console.error("Invalid response format");
   }
-  console.log(scenario);
-  console.log(data);
 
   return data !== "" ? (
     <div className="feedbackContainer">
@@ -28,19 +15,18 @@ const FeedbackDisplay = ({ response, scenario }) => {
       {/* Oppsummering */}
       <section>{data.oppsummering}</section>
       {/* Brukte metoder */}
-      <section >
+      <section>
         <h3>Brukte metoder:</h3>
         <section className="metodeSection">
-          
-        {data.brukteMetoder.map((item, index) => {
-          return (
-            <div key={index} className="metodeContainer">
-              <h4>{item.metode}</h4>
-              <p className="metodeEksempel">"{item.eksempel}"</p>
-              <p>{item.vurdering}</p>
-            </div>
-          );
-        })}
+          {data.brukteMetoder.map((item, index) => {
+            return (
+              <div key={index} className="metodeContainer">
+                <h4>{item.metode}</h4>
+                <p className="metodeEksempel">"{item.eksempel}"</p>
+                <p>{item.vurdering}</p>
+              </div>
+            );
+          })}
         </section>
       </section>
       {/* styrker */}
@@ -63,7 +49,6 @@ const FeedbackDisplay = ({ response, scenario }) => {
         </ul>
       </section>
 
-      
       {/* <h1>{data.title}</h1> 
       <p>{data.introduction}</p>
 
